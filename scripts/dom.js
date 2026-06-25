@@ -48,3 +48,46 @@ export function generateGallery(works) {
         divGallery.appendChild(figureElement);
     }
 }
+
+/**
+ * Cette fonction récupère en pramètre une liste de catégorie
+ * Elle crée un bloc après le h2 du portfolio et afficher les éléments 
+ * reçus en paramètre en ajoutant un fitre "Tous"
+ * @param {string[]} categories Liste des catégories.
+ */
+export function generateFilterCategory(categories) {
+
+    // récupéraration de l'élément titre  qui précéde le bloc filtre
+    const titreElement = document.querySelector("#portfolio h2");
+
+    // création du block filtre
+    const divFilter = document.createElement("div");
+
+    // création du premier bouton qui est actif par défaut
+    let buttonElement = document.createElement("button");
+    buttonElement.type = "button";
+    buttonElement.textContent = "Tous";
+    buttonElement.classList.add("filter-button-selected");
+    buttonElement.classList.add("filter-button");
+
+    // on rattache le premier filtre au bloc filtre
+    divFilter.appendChild(buttonElement);
+
+    // on balaye les catégories pour ajouter les autres boutons
+    for (let category of categories) {
+
+        // création du bouton
+        buttonElement = document.createElement("button");
+        buttonElement.type = "button";
+        buttonElement.textContent = category;
+        buttonElement.classList.add("filter-button");
+
+        // on rattache le filtre au bloc filtre
+        divFilter.appendChild(buttonElement);
+    }
+
+    // on insère le bloc filtre après le titre
+    titreElement.insertAdjacentElement("afterend", divFilter);
+
+
+}
