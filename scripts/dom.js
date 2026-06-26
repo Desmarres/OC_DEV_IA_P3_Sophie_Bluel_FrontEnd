@@ -4,7 +4,8 @@
  * 
  *********************************************************************************/
 
-import { filterGallery } from "./data.js";
+import { filterGallery, validateEmail, validatePassword } from "./data.js";
+import { postLogin } from "./api.js";
 
 /**
  * Cette fonction récupère en pramètre un tableau d'oeuvre
@@ -111,6 +112,12 @@ export function generateFilterCategory(categories, listCategories) {
 
 }
 
+/**
+ * Cette fonction récupère les boutons du portfolio qui ont la classe 'filter-button'
+ * Elle ajoute un EventListener afin d'écouter le click
+ * Au clik, elle appelle la fonction modifiant l'affichage de la galerie, 
+ * puis celle modifiant l'état des boutons filtres
+ */
 export function filterButtonEventListener() {
 
     // Récupération des boutons du bloc filtre
@@ -126,6 +133,20 @@ export function filterButtonEventListener() {
     }
 }
 
+/**
+ * Cette fonction met à jour l'état de sélection d'une liste de boutons.
+ *
+ * Parcourt tous les boutons du tableau :
+ * - ajoute la classe `filter-button-selected` au bouton dont
+ *   l'attribut `data-id` correspond à l'identifiant fourni ;
+ * - retire cette classe de tous les autres boutons.
+ *
+ * Cette fonction garantit qu'un seul bouton est marqué comme sélectionné.
+ *
+ * @param {HTMLElement[]} listeButtonElement 
+ * @param {string} dataSetId 
+ */
+
 function changeButtonSelected(listeButtonElement, dataSetId) {
     for (let i = 0; i < listeButtonElement.length; i++) {
         if (listeButtonElement[i].dataset.id === dataSetId) {
@@ -135,4 +156,81 @@ function changeButtonSelected(listeButtonElement, dataSetId) {
 
         }
     }
+}
+
+/**
+ * Cette fonction initilaise les écouteurs et les actions 
+ * des différents champs et bouton du formulaire
+ */
+export function loginForm() {
+
+    // Récupération de la balise form
+    let form = document.querySelector("#login form");
+
+    // Récupération des champs du formulaire
+    let inputEmail = document.querySelector("#email");
+    let inputPassword = document.querySelector("#password");
+
+    // initialisation des écouteurs sur les inputs et sur la validation du formulaire
+    emailEventListener(inputEmail);
+    passwordEventListener(inputPassword);
+    submitForm(form, inputEmail, inputPassword);
+}
+
+/**
+ * Cette fonction contrôle le champ de saisie email et modifie le CSS suivant la validité de la saisie
+ * @param {HTMLElement} inputPassword 
+ */
+function emailEventListener(inputEmail) {
+
+    // On écoute quand le visiteur sort du champ de saisie et on vérifie que l'email est valide
+    //  Si oui, on enlève la classe error
+    //  Si non, on ajoute la classe error
+    inputEmail.addEventListener("focusout", () =>
+        validateEmail(inputEmail.value)
+            ? inputEmail.classList.remove("error")
+            : inputEmail.classList.add("error"));
+}
+
+/**
+ * Cette fonction contrôle le champ de saisie password et modifie le CSS suivant la validité de la saisie
+ * @param {HTMLElement} inputPassword 
+ */
+function passwordEventListener(inputPassword) {
+
+    // On écoute quand le visiteur sort du champ de saisie et on vérifie que l'email est valide
+    //  Si oui, on enlève la classe error
+    //  Si non, on ajoute la classe error
+    inputPassword.addEventListener("focusout", () =>
+        validatePassword(inputPassword.value)
+            ? inputPassword.classList.remove("error")
+            : inputPassword.classList.add("error"));
+}
+
+/**
+ * Cette fonction gère la validation du formulaire
+ * Elle vérifie les entrées et envoie la requête au serveur pour authentifier le visiteur
+ * @param {HTMLElement} form 
+ * @param {HTMLElement} inputEmail 
+ * @param {HTMLElement} inputPassword 
+ */
+function submitForm(form, inputEmail, inputPassword) {
+
+
+    /* Gestion de la validation du formulaire */
+    form.addEventListener("submit", async (event) => {
+        // annulation du comprtement par défaut
+        event.preventDefault();
+
+        // vérification des éléments du formulaire avant envoi au serveur
+        if (validateEmail(inputEmail.value) && validatePassword(inputPassword.value)) {
+
+            // récupération de la réponse du serveur
+            const userConnexion = await postLogin(inputEmail.value, inputPassword.value)
+
+            console.log(userConnexion);
+            console.log(userConnexion.userId);
+            console.log(userConnexion.token);
+        }
+    })
 }
