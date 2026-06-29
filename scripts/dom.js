@@ -64,8 +64,6 @@ export function generateGallery(works) {
  */
 export function generateFilterCategory(categories, listCategories) {
 
-    console.log(categories)
-    console.log(listCategories)
     // récupéraration de l'élément titre  qui précéde le bloc filtre
     const titreElement = document.querySelector("#portfolio h2");
 
@@ -210,6 +208,9 @@ function passwordEventListener(inputPassword) {
 /**
  * Cette fonction gère la validation du formulaire
  * Elle vérifie les entrées et envoie la requête au serveur pour authentifier le visiteur
+ * Si l'authentification est valide, il y a redirection vers la page d'accueil et 
+ * enregistrement des éléments d'identification dans le LocalStorage.
+ * Sinon elle appelle la focntion qui affiche le message d'erreur
  * @param {HTMLElement} form 
  * @param {HTMLElement} inputEmail 
  * @param {HTMLElement} inputPassword 
@@ -228,9 +229,64 @@ function submitForm(form, inputEmail, inputPassword) {
             // récupération de la réponse du serveur
             const userConnexion = await postLogin(inputEmail.value, inputPassword.value)
 
-            console.log(userConnexion);
-            console.log(userConnexion.userId);
-            console.log(userConnexion.token);
+            if (userConnexion.status === 200) {
+                //Stockage des information dans le localStorage
+                window.localStorage.setItem("userId", userConnexion.message.userId);
+                window.localStorage.setItem("token", userConnexion.message.token);
+
+                // Réinitialisation des champs du formulaire
+                inputEmail.value = "";
+                inputPassword.value = "";
+
+                // Fonction de redirection de la page
+                redirectPage("index.html")
+            } else {
+                // Fonction qui affiche le message d'erreur
+                loginError()
+            }
+
+
         }
     })
+}
+
+/**
+ * Cette fonction remplace le nom de la page actuelle par le nom de la page renseignée 
+ * en paramètre. Puis elle effectue une redirection au niveau du navigateur.
+ * Les deux fichiers html doivent être dans le même dossier.
+ * @param {string} nomPage : Nom du fichier correspondant à la page cible.
+ */
+function redirectPage(nomPage) {
+    // Récupération de l'URL actuelle
+    let currentAddress = document.URL;
+    // Réécriture de l'adresse cible
+    let targetAddress = currentAddress.replace("login.html", nomPage);
+    // Rediraction de la page vers l'adresse cible
+    document.location.assign(targetAddress);
+}
+
+
+/**
+ * Cette fonction initialise l'affichage du message d'erreur
+ */
+function loginError() {
+
+    // Récupération de la balise h2
+    let titreElement = document.querySelector("#login h2");
+
+    // récupération de la balise du paragraphe erreur
+    let paragrapheElement = document.querySelector(".errorLogin");
+
+    // si la balise n'éxiste pas on va la créer
+    if (!paragrapheElement) {
+        // Création du la balise p et attribution de ses classes
+        let paragrapheElement = document.createElement("p");
+        paragrapheElement.classList.add('error');
+        paragrapheElement.classList.add('errorLogin');
+        // Attribution du message d'erreur
+        paragrapheElement.textContent = "Adresse e-mail ou mot de passe incorrect.";
+
+        // on ajoute le paragraphe après le titre h2
+        titreElement.insertAdjacentElement("afterend", paragrapheElement);
+    }
 }

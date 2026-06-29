@@ -74,7 +74,22 @@ export async function postLogin(email, password) {
         headers: { "Content-Type": "application/json" },
         body: userRequest
     });
-    // production de l'objet JS à partir de la réponse 
-    const userConnexion = await reponse.json();
+
+    let userConnexion = {};
+    // Vérification du succès de la requête
+    if (await reponse.ok) {
+        // préparation de la réponse avec le code 200 et les éléments en JS 
+        userConnexion = {
+            "status": reponse.status,
+            "message": await reponse.json()
+        };
+    } else {
+        // préparation de la réponse avec le code erreur (404 Not Found | 401 Not Authorized) 
+        // et le message de l'erreur
+        userConnexion = {
+            "status": reponse.status,
+            "message": reponse.statusText
+        };
+    }
     return userConnexion;
 }
