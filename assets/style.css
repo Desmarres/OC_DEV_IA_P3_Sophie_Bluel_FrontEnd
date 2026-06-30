@@ -142,7 +142,7 @@ table {
 
 /** end reset css**/
 body {
-	max-width: 1140px;
+	max-width: 1440px;
 	margin: auto;
 	font-family: 'Work Sans';
 	font-size: 14px;
@@ -224,9 +224,34 @@ li:hover {
 	margin-bottom: 0.5em;
 }
 
+#portfolio {
+	position: relative;
+}
+
 #portfolio h2 {
 	text-align: center;
 	margin-bottom: 50px;
+}
+
+/* Gestion du bloc modifier */
+.edit {
+	position: absolute;
+	top: 9px;
+	left: calc(50% + 126px);
+	display: flex;
+	align-items: flex-end;
+	gap: 9px;
+}
+
+.logo-edit {
+	width: 20px;
+}
+
+.separator {
+	border: none;
+	/* Supprime la bordure par défaut */
+	border-top: 1px solid #ccc;
+	margin: 20px 0;
 }
 
 /* Gestion des filtres de la galerie */
@@ -235,9 +260,11 @@ li:hover {
 	justify-content: center;
 	gap: 10px;
 	margin-bottom: 50px;
+	width: 100%;
 }
 
-.filter-button {
+.filter-button,
+.button {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -253,7 +280,8 @@ li:hover {
 	color: #1D6154;
 }
 
-.filter-button-selected {
+.filter-button-selected,
+.button {
 	background-color: #1D6154;
 	color: #FFFFFF;
 }

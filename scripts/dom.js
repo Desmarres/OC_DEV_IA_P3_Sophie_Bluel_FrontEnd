@@ -7,6 +7,17 @@
 import { filterGallery, validateEmail, validatePassword } from "./data.js";
 import { postLogin } from "./api.js";
 
+
+// déclaration des constantes
+const login = {
+    "texte": "login",
+    "class": "js-login"
+};
+const logout = {
+    "texte": "logout",
+    "class": "js-logout"
+};
+
 /**
  * Cette fonction récupère en pramètre un tableau d'oeuvre
  * Elle vide le bloc div "gallery" pour afficher les éléments reçus en paramètre
@@ -239,7 +250,7 @@ function submitForm(form, inputEmail, inputPassword) {
                 inputPassword.value = "";
 
                 // Fonction de redirection de la page
-                redirectPage("index.html")
+                redirectPage("login.html", "index.html")
             } else {
                 // Fonction qui affiche le message d'erreur
                 loginError()
@@ -254,20 +265,21 @@ function submitForm(form, inputEmail, inputPassword) {
  * Cette fonction remplace le nom de la page actuelle par le nom de la page renseignée 
  * en paramètre. Puis elle effectue une redirection au niveau du navigateur.
  * Les deux fichiers html doivent être dans le même dossier.
- * @param {string} nomPage : Nom du fichier correspondant à la page cible.
+ * @param {string} currentPage : Nom du fichier correspondant à la page actuelle.
+ * @param {string} targetPage : Nom du fichier correspondant à la page cible.
  */
-function redirectPage(nomPage) {
+function redirectPage(currentPage, targetPage) {
     // Récupération de l'URL actuelle
     let currentAddress = document.URL;
     // Réécriture de l'adresse cible
-    let targetAddress = currentAddress.replace("login.html", nomPage);
+    let targetAddress = currentAddress.replace(currentPage, targetPage);
     // Rediraction de la page vers l'adresse cible
     document.location.assign(targetAddress);
 }
 
 
 /**
- * Cette fonction initialise l'affichage du message d'erreur
+ * Cette fonction initialise l'affichage du message d'erreur d'authentification
  */
 function loginError() {
 
@@ -289,4 +301,113 @@ function loginError() {
         // on ajoute le paragraphe après le titre h2
         titreElement.insertAdjacentElement("afterend", paragrapheElement);
     }
+}
+
+
+/**
+ * Cette fonction génére le lien pointant sur le bloc modal
+ */
+function generateEditElement() {
+
+    // récupéraration de l'élément titre  qui précéde le bloc d'édition
+    const titreElement = document.querySelector("#portfolio h2");
+
+    // on crée le lien vers l'ancre du bloc modal
+    let lienElement = document.createElement("a");
+    lienElement.classList.add("edit")
+    lienElement.href = "#modalGestion"
+
+    // on crée l'image du logo de l'édition
+    let imageElement = document.createElement("img");
+    imageElement.src = "./assets/icons/edit.png";
+    imageElement.alt = "Logo d'édition";
+    imageElement.classList.add("logo-edit")
+
+    // on crée le paragraphe avec le texte
+    let pElement = document.createElement("p");
+    pElement.textContent = "modifier";
+
+    // on assemble le bloc lien
+    lienElement.appendChild(imageElement);
+    lienElement.appendChild(pElement);
+
+    // on ajoute le bloc après le titre
+    titreElement.insertAdjacentElement("afterend", lienElement);
+}
+
+/**
+ * Cette fonction supprime le lien pointant sur le bloc modal
+ */
+
+function removeEditElement() {
+
+    // récupéraration du bloc d'édition
+    const titreElement = document.querySelector("#portfolio .edit");
+
+    if (titreElement) titreElement.remove();
+}
+
+/**
+ * cette fonction modifie un élément du DOM en supprimant une class puis en ajoutant une autre.
+ * Il modifie également le texte de l'élément si le paramètre est renseigné
+ * @param {HTMLElement} HTMLElement : l'élément concerné par le changement de class et de texte
+ * @param {string} oldClass : la classe a supprimer
+ * @param {string} newClass : la class a ajouter
+ * @param {string} newText : le nouveau contenu
+ */
+
+function changeClass(HTMLElement, oldClass, newClass, newText = null) {
+
+    // supprime la class reçu en paramètre
+    HTMLElement.classList.remove(oldClass);
+    // ajoute la class reçu en paramètre
+    HTMLElement.classList.add(newClass);
+    // si il y a du texte en paramètre, il le modifie dans l'élément
+    if (newText === null) HTMLElement.textContent = newText;
+}
+
+/**
+ * Cette fonction gère la connexion et écoute le clik sur le lien login/logout et 
+ * pointe vers login.html ou 
+ * reste sur la page et supprime le token du localStorage
+ * @param {string} currentPage : nom de la page actuelle
+ */
+
+export function logEventListener(currentPage) {
+
+    // On récupère le token s'il est présent
+    let token = window.localStorage.getItem("token");
+
+    // on récupère le lien login/logout
+    const lienLog = document.querySelector("header .js-log");
+
+    // si nous avons un token, nous sommes connecté
+    if (token !== null) {
+        console.log("Connected");
+        // si nous sommes sur l'index, nous appelons 
+        // la fonction qui gé,ère le liens vers l'édition
+        if (currentPage === "index.html") generateEditElement();
+        // nous modifions le texte login en logout et les class associées
+        changeClass(lienLog, login.class, logout.class, logout.texte);
+    }
+
+    // on écoute le click sur le lien login/logout
+    lienLog.addEventListener("click", (event) => {
+        event.preventDefault();
+        // si nous n'étions pas connecté, nous nous redirigeons vers la page login.html
+        if (lienLog.classList.contains(login.class)) {
+            redirectPage(currentPage, "login.html");
+        } else {
+            // sinon si nous sommes sur la page index.html, nous supprimons le liens 
+            // vers l'édition
+            if (currentPage === "index.html") removeEditElement();
+            // nous vidons les éléments token et id du localStorage
+            localStorage.clear();
+            console.log("Disconnected");
+            // nous modifions le texte logout en login et les class associées
+            changeClass(lienLog, logout.class, login.class, login.texte);
+        }
+    })
+
+
 }
