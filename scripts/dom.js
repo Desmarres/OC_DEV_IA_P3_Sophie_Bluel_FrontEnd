@@ -8,7 +8,7 @@ import { filterGallery, validateEmail, validatePassword } from "./data.js";
 import { postLogin } from "./api.js";
 
 
-// déclaration des constantes
+// déclaration des constantes communes
 const login = {
     "texte": "login",
     "class": "js-login"
@@ -17,6 +17,7 @@ const logout = {
     "texte": "logout",
     "class": "js-logout"
 };
+
 
 /**
  * Cette fonction récupère en pramètre un tableau d'oeuvre
@@ -333,6 +334,68 @@ function generateEditElement() {
 
     // on ajoute le bloc après le titre
     titreElement.insertAdjacentElement("afterend", lienElement);
+
+    // on appelle la fonction qui va écouter le lien
+    editLienEventListener(lienElement)
+}
+
+/**
+ * Cette fonction reçoit un élément lien en paramètre et ouvre la modale correspondante. 
+ * Elle initialise les écouteurs pour la fermeture de la modale.
+ * @param {HTMLElement} lienElement : le lien ouvrant la modale dont l'ID est dans l'attribut href
+ */
+function editLienEventListener(lienElement) {
+    lienElement.addEventListener("click", (event) => {
+        // annulation du comprtement par défaut
+        event.preventDefault();
+        // on récupère l'ID de la modale
+        const idModal = lienElement.getAttribute("href");
+        // on récupère l'élément HTML correspondant à la modale
+        const targetModal = document.querySelector(idModal);
+        // on appelle la fonction d'afficahge de la modale
+        openModal(targetModal);
+        // on récupère le logo permettant de fermer la modale
+        const targetClosCross = document.querySelector(idModal + " .logo-close-cross");
+        // on crée un tableau des éléments à écouter pour fermer la modale
+        const listeElementCloseModal = [targetModal, targetClosCross];
+        // on appelle la fonction qui va placer des écouteurs sur les éléments du tableau
+        closeModalEventListener(listeElementCloseModal, targetModal);
+        // on stop la propagation de l'écouteur qui ferme la modale pour la partie fenêtre de gestion
+        const modalWrapper = document.querySelector(".modal-wrapper");
+        modalWrapper.addEventListener("click", (event) => event.stopPropagation());
+    })
+}
+
+/**
+ * Cette fonction initialise des écouteurs de clisk sur les éléments du tableau en paramètre 
+ * et appelle la fonction fermant la modal
+ * @param {HTMLElement[]} listeElementHTML : tableau de plusieurs éléments à balayer
+ * @param {HTMLElement} targetModal : modal ciblé par la fermeture
+ */
+function closeModalEventListener(listeElementHTML, modal) {
+    listeElementHTML.forEach(element => {
+        element.addEventListener("click", () => closeModal(modal));
+    });
+}
+
+/**
+ * Cette fonction rend visible la modale
+ * @param {HTMLElement} modal 
+ */
+function openModal(modal) {
+    modal.style.display = null;
+    modal.removeAttribute('aria-hidden');
+    modal.setAttribute("aria-modal", "true");
+}
+
+/**
+ * Cette fonction cache la modal
+ * @param {HTMLElement} modal 
+ */
+function closeModal(modal) {
+    modal.style.display = "none";
+    modal.setAttribute('aria-hidden', "true");
+    modal.removeAttribute("aria-modal");
 }
 
 /**
