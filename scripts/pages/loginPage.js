@@ -1,4 +1,5 @@
-import { loginForm, logEventListener } from "./dom.js";
+import { loginForm } from "../dom/login.js";
+import { logManagement } from "../dom/auth.js"
 
 /* ------------ GESTION DU FORMULAIRE ------------ */
 
@@ -9,4 +10,4 @@ loginForm();
 
 // on appelle la fonction qui gère le lien login/logout
 // en lui précisant la page actuelle
-logEventListener("login.html");
+logManagement("login.html");

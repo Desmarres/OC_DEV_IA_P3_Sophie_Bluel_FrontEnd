@@ -1,7 +1,7 @@
-import { getWorks, getCategories } from "./api.js";
-import { generateGallery, generateFilterCategory, filterButtonEventListener, logEventListener } from "./dom.js";
-import { recoveryFilterCategoryElements } from "./data.js";
-
+import { getWorks, getCategories } from "../services/api.js";
+import { generateGallery, generateFilterCategory, filterButtonEventListener } from "../dom/gallery.js";
+import { recoveryFilterCategoryElements } from "../services/data.js";
+import { logManagement } from "../dom/auth.js"
 
 /* ------------ GESTION DE LA GALLERIE ------------ */
 
@@ -30,4 +30,4 @@ filterButtonEventListener();
 
 // on appelle la fonction qui gère le lien login/logout 
 // en lui précisant la page actuelle
-logEventListener("index.html");
+logManagement("index.html");

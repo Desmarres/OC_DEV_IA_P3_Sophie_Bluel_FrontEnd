@@ -5,7 +5,7 @@
  *********************************************************************************/
 
 import { getWorks } from "./api.js";
-import { generateGallery } from "./dom.js";
+import { generateGallery } from "../dom/gallery.js";
 /**
  * 
  * @param {object} works : [{
