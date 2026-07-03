@@ -87,3 +87,19 @@ export function removeBlackBarEditMode() {
     body.classList.remove("padding-top-40");
 
 }
+
+/**
+ * Cette fonction reçoit le nom d'une balise et un id.
+ * Elle supprime toutes les balises dont le data-id correspond à la valeur en paramètre
+ * @param {string} balise : nom de la balise
+ * @param {number} dataId : id de l'oeuvre
+ */
+export function removeElementBydataId(balise, dataId) {
+
+    // on récupère la liste de toutes les balises correspondant au nom reçu en entrée
+    // et qui possèdent l'attribut data-id de la valeur reçu
+    const listeDeleteElement = document.querySelectorAll(`${balise}[data-id="${dataId}"]`)
+
+    // on supprime l'ensemble des éléments
+    listeDeleteElement.forEach(element => element.remove())
+}

@@ -4,8 +4,8 @@
  * 
  *********************************************************************************/
 
-import { getWorks } from "../services/api.js";
-import { createBlockModifier } from "./ui.js";
+import { getWorks, deleteWork } from "../services/api.js";
+import { createBlockModifier, removeElementBydataId } from "./ui.js";
 
 /**
  * Cette fonction génére le lien pointant sur le bloc modal
@@ -36,17 +36,13 @@ export function generateEditElement() {
  * @param {HTMLElement} lienElement : le lien ouvrant la modale dont l'ID est dans l'attribut href
  */
 function modalOpeningManagement(event, lienElement) {
-
-    console.log(event);
-    console.log(lienElement);
-
-    // annulation du comprtement par défaut
+    // annulation du comportement par défaut
     event.preventDefault();
     // on récupère l'ID de la modale
     const idModal = lienElement.getAttribute("href");
     // on récupère l'élément HTML correspondant à la modale
     const targetModal = document.querySelector(idModal);
-    // on appelle la fonction d'afficahge de la modale
+    // on appelle la fonction d'affichage de la modale
     openModal(targetModal);
     // on récupère le logo permettant de fermer la modale
     const targetClosCross = document.querySelector(idModal + " .logo-close-cross");
@@ -145,6 +141,14 @@ function createWorkEditMode(work) {
     deleteButton.setAttribute("type", "button");
     deleteButton.setAttribute("aria-label", "Delete");
     deleteButton.classList.add("logo-delete-work");
+    // on écoute le click pour appeller la fonction de gestion de la suppression d'une oeuvre
+    deleteButton.addEventListener("click", (event) => {
+        const workId = event.target.closest("figure").getAttribute("data-id");
+        deleteWorkManagement(workId);
+    });
+
+    // attribution d'un data-id pour identifier l'oeuvre
+    figureElement.dataset.id = work.id;
 
     // on rattache l'icone supprimer à l'image
     deleteButton.appendChild(iconeElement);
@@ -176,4 +180,24 @@ export function removeEditElement() {
     const titreElement = document.querySelector("#portfolio .edit");
 
     if (titreElement) titreElement.remove();
+}
+
+/**
+ * Cette fonction reçoit l'id d'une oeuvre à supprimer.
+ * Elle appelle la fonction qui va requêter l'API
+ * En cas de succès, elle appelle la fonction qui va supprimer 
+ * l'ensemble des oeuvres correspondant à cette id du site
+ * @param {number} id : id de l'oeuvre à supprimer
+ */
+async function deleteWorkManagement(id) {
+
+    // on appelle la fonction qui va requeter l'API pour supprimer 
+    // l'élement correspondant à l'id reçu en entrée
+    const reponse = await deleteWork(id);
+    // si la requête est un succès
+    if (reponse.etat) {
+        removeElementBydataId("figure", id);
+    } else {
+        console.log(reponse.statusText);
+    }
 }

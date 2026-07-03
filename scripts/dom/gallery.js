@@ -59,9 +59,15 @@ function createWorkGallery(work) {
 
     // création des balises figure, image et figcaption
     let figureElement = document.createElement("figure");
+    // attribution d'un data-id pour identifier l'oeuvre
+    figureElement.dataset.id = work.id;
+
+    // création de l'image de l'oeuvre
     let imageElement = document.createElement("img");
     imageElement.src = work.imageUrl;
     imageElement.alt = work.title;
+
+    //création de lélément titre de l'oeuvre
     let figCaptionElement = document.createElement("figcaption");
     figCaptionElement.textContent = work.title;
 
