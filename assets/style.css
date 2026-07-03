@@ -142,6 +142,7 @@ table {
 
 /** end reset css**/
 body {
+	position: relative;
 	max-width: 1440px;
 	margin: auto;
 	font-family: 'Work Sans';
@@ -150,6 +151,7 @@ body {
 
 header {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: space-between;
 	margin: 50px 0
 }
@@ -233,7 +235,7 @@ li:hover {
 	margin-bottom: 50px;
 }
 
-/* Gestion du bloc modifier */
+/* Gestion du la page en mode édition */
 .edit {
 	position: absolute;
 	top: 9px;
@@ -247,6 +249,30 @@ li:hover {
 	width: 20px;
 }
 
+.black-bar {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100vw;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 59px;
+	background-color: #000000;
+	color: #FFFFFF;
+}
+
+.black-bar p {
+	font-family: sans-serif;
+	font-weight: 400;
+	font-size: 16px;
+}
+
+.padding-top-40 {
+	padding-top: 59px;
+}
+
+/* Gestion de la modale */
 .logo-close-cross {
 	position: absolute;
 	top: 26px;

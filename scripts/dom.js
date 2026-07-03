@@ -318,25 +318,37 @@ function generateEditElement() {
     lienElement.classList.add("edit")
     lienElement.href = "#modalGestion"
 
-    // on crée l'image du logo de l'édition
-    let imageElement = document.createElement("img");
-    imageElement.src = "./assets/icons/edit.png";
-    imageElement.alt = "Logo d'édition";
-    imageElement.classList.add("logo-edit")
-
-    // on crée le paragraphe avec le texte
-    let pElement = document.createElement("p");
-    pElement.textContent = "modifier";
-
-    // on assemble le bloc lien
-    lienElement.appendChild(imageElement);
-    lienElement.appendChild(pElement);
+    //on appelle la fonction qui va créer les éléments HTML interne à la balise crée
+    createBlockModifier(lienElement, "modifier")
 
     // on ajoute le bloc après le titre
     titreElement.insertAdjacentElement("afterend", lienElement);
 
     // on appelle la fonction qui va écouter le lien
     editLienEventListener(lienElement)
+}
+
+/**
+ * Cette fonction reçoit une balise en paramètre et le texte de la balise.
+ * Elle ajoute une balise img avec le logo modifier, ainsi qu'une balise p avec le texte.
+ * @param {HTMLElement} HTMLElement : l'élément parent acceuillant le logo modifier et le texte
+ * @param {string} texte : texte à afficher dans le block
+ */
+function createBlockModifier(HTMLElement, texte) {
+
+    // on crée l'image du logo de l'édition
+    let iconeElement = document.createElement("i");
+    iconeElement.classList.add("fa-regular");
+    iconeElement.classList.add("fa-pen-to-square");
+    iconeElement.classList.add("logo-edit");
+
+    // on crée le paragraphe avec le texte
+    let pElement = document.createElement("p");
+    pElement.textContent = texte;
+
+    // on assemble le bloc lien
+    HTMLElement.appendChild(iconeElement);
+    HTMLElement.appendChild(pElement);
 }
 
 /**
@@ -426,7 +438,7 @@ function changeClass(HTMLElement, oldClass, newClass, newText = null) {
     // ajoute la class reçu en paramètre
     HTMLElement.classList.add(newClass);
     // si il y a du texte en paramètre, il le modifie dans l'élément
-    if (newText === null) HTMLElement.textContent = newText;
+    if (newText !== null) HTMLElement.textContent = newText;
 }
 
 /**
@@ -448,8 +460,10 @@ export function logEventListener(currentPage) {
     if (token !== null) {
         console.log("Connected");
         // si nous sommes sur l'index, nous appelons 
-        // la fonction qui gé,ère le liens vers l'édition
+        // la fonction qui génère le liens vers l'édition
         if (currentPage === "index.html") generateEditElement();
+        // on appelle la fonction qui ajoute la bar mode Edition en haut de la page
+        addBlackBarEditMode()
         // nous modifions le texte login en logout et les class associées
         changeClass(lienLog, login.class, logout.class, logout.texte);
     }
@@ -464,6 +478,8 @@ export function logEventListener(currentPage) {
             // sinon si nous sommes sur la page index.html, nous supprimons le liens 
             // vers l'édition
             if (currentPage === "index.html") removeEditElement();
+            // on appelle la fonction qui retire la bar mode Edition en haut de la page
+            removeBlackBarEditMode()
             // nous vidons les éléments token et id du localStorage
             localStorage.clear();
             console.log("Disconnected");
@@ -472,5 +488,45 @@ export function logEventListener(currentPage) {
         }
     })
 
+
+}
+
+/**
+ * Cette fonction ajoute la bar noir indiquant le mode edition
+ */
+function addBlackBarEditMode() {
+
+    // on récupère le body
+    const body = document.querySelector("body");
+
+    // on crée un block qui va acceuillir les éléments modifiés
+    let blackBar = document.createElement("div");
+    blackBar.classList.add("black-bar");
+
+    //on appelle la fonction qui va créer les éléments HTML interne à la balise
+    createBlockModifier(blackBar, "Mode édition");
+
+    // on ajoute le bloc avant le header
+    body.insertAdjacentElement("afterbegin", blackBar);
+
+    // on décale le header
+    body.classList.add("padding-top-40");
+
+}
+
+/**
+ * Cette fonction supprime la bar noir indiquant le mode edition
+ */
+function removeBlackBarEditMode() {
+
+    // on récupère le body
+    const body = document.querySelector("body");
+
+    // on récupère l'élément black-bar et on le supprime
+    const blackBar = document.querySelector(".black-bar");
+    blackBar.remove();
+
+    // on retire le décalage du header
+    body.classList.remove("padding-top-40");
 
 }
