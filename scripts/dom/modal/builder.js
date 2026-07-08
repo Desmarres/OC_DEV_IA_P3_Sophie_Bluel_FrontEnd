@@ -11,6 +11,26 @@ import { getCategories } from "../../services/api.js";
 
 import { deleteButton } from "../../config/constants.js";
 
+import {
+    imageAddPhotoAttribute,
+    inputFileAttribute,
+    labelFileAttribute,
+    pInfoPhotoAttribute,
+    labelTitreAttribute,
+    inputTitreAttribute,
+    labelCategoriesAttribute,
+    selectCategoriesAttribute
+} from "../../config/attributs.js";
+
+import {
+    labelFileText,
+    pInfoPhotoText,
+    labelTitreText,
+    labelCategoriesText
+} from "../../config/text.js";
+
+import { addPhotoManagement } from "./events.js";
+
 
 /**
  * Cette fonction reçoit une ouevre en entrée et 
@@ -102,39 +122,29 @@ export function createBlocAddPhoto() {
     // initilisation de la variable
     let listeChildElementDivPhoto = [];
 
-    /* on crée un objet regroupant tous les attributs add-photo*/
-    const imageAttribute = {
-        "src": "./assets/icons/picture-svgrepo-com.svg",
-        "alt": "icone d'image"
-    };
     /* on appelle la fonction qui va créer l'élément add-photo*/
-    listeChildElementDivPhoto.push(createElement("img", imageAttribute));
+    const imageElement = createElement("img", imageAddPhotoAttribute);
+    /* on ajoute un écouteur click sur l'image pour déclancher l'input */
+    imageElement.addEventListener("click", () => {
+        document.getElementById(inputFileAttribute.id).click()
+    });
+    /* on l'ajoute à la liste des enfants du bloc Div Photo */
+    listeChildElementDivPhoto.push(imageElement);
 
-    /* on crée un objet regroupant tous les attributs add-photo*/
-    const labelFileAttribute = {
-        "for": "photo",
-        "class": "button-add-image"
-    };
-    const labelFileText = "+ Ajouter photo";
+
     /* on appelle la fonction qui va créer l'élément add-photo*/
     listeChildElementDivPhoto.push(createElement("label", labelFileAttribute, labelFileText));
 
-    /* on crée un objet regroupant tous les attributs input type file*/
-    const inputFileAttribute = {
-        "type": "file",
-        "name": "photo",
-        "id": "photo",
-        "accept": "image/png, image/jpeg",
-        "hidden": ""
-    }
     /* on appelle la fonction qui va créer l'élément input type file*/
-    listeChildElementDivPhoto.push(createElement("input", inputFileAttribute));
+    const inputElement = createElement("input", inputFileAttribute);
+    /* on ajoute un écouteur change */
+    inputElement.addEventListener("change", () => addPhotoManagement(inputElement.files[0]));
+
+    /* on l'ajoute à la liste des enfants du bloc Div Photo */
+    listeChildElementDivPhoto.push(inputElement);
 
     /* on crée un objet regroupant tous les attributs paragraphe d'information*/
-    const pInfoPhotoAttribute = {
-        "class": "info-add-photo"
-    }
-    const pInfoPhotoText = "jpg, png : 4mo max";
+
     /* on appelle la fonction qui va créer l'élément paragraphe d'information*/
     listeChildElementDivPhoto.push(createElement("p", pInfoPhotoAttribute, pInfoPhotoText));
 
@@ -150,21 +160,9 @@ export function createBlocDivTitre() {
     // initilisation de la variable
     let listeChildElementDivTitre = [];
 
-    /* on crée un objet regroupant tous les attributs label-titre*/
-    const labelTitreAttribute = {
-        "for": "title"
-    }
-    const labelTitreText = "Titre";
     /* on appelle la fonction qui va créer l'élément label-titre*/
     listeChildElementDivTitre.push(createElement("label", labelTitreAttribute, labelTitreText));
 
-
-    /* on crée un objet regroupant tous les attributs input type file*/
-    const inputTitreAttribute = {
-        "type": "text",
-        "name": "title",
-        "id": "title"
-    }
     /* on appelle la fonction qui va créer l'élément input type file*/
     listeChildElementDivTitre.push(createElement("input", inputTitreAttribute));
 
@@ -180,21 +178,9 @@ export async function createBlocDivCategories() {
     // initilisation de la variable
     let listeChildElementDivCategories = [];
 
-    /* on crée un objet regroupant tous les attributs label-categories*/
-    const labelCategoriesAttribute = {
-        "for": "categories"
-    }
-    const labelCategoriesText = "Catégorie";
     /* on appelle la fonction qui va créer l'élément label-categories*/
     listeChildElementDivCategories.push(createElement("label", labelCategoriesAttribute, labelCategoriesText));
 
-
-    /* on crée un objet regroupant tous les attributs input type file*/
-    const selectCategoriesAttribute = {
-        "name": "category",
-        "id": "categories",
-        "required": ""
-    }
     /* on appelle la fonction qui va créer l'élément input type file*/
     listeChildElementDivCategories.push(createElement("select", selectCategoriesAttribute));
 
@@ -215,7 +201,6 @@ export async function createBlocSelect() {
 
     // initilisation de la variable
     let listeChildElementSelect = [];
-
 
     /* on crée un objet regroupant tous les attributs de la première option 
     par défaut et non sélectionnable*/

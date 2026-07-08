@@ -14,6 +14,11 @@ import { validatePostWork } from "./form.js";
 
 import { modalPages } from "../../config/constants.js";
 
+import {
+    imageAddPhotoAttribute,
+    inputFileAttribute
+} from "../../config/attributs.js";
+
 /**
  * Cette fonction appelle la fonction fermant la modal au clisk sur l'éléments en paramètre 
  * et
@@ -59,4 +64,31 @@ export function buttonModalManagement(event) {
     } else {
         validatePostWork();
     }
+}
+
+export function addPhotoManagement(photo) {
+
+    // Vérifie s'il y a un un fichier du type image
+    if (photo && photo.type.startsWith("image/")) {
+
+        /* on récupère le bloc div Add Photo */
+        const divAddPhotoElement = document.querySelector(".add-photo");
+        /* on parcours ses enfants pour afficher l'image choisie et 
+        faire diparaitre les autres élements */
+        for (const childElement of divAddPhotoElement.children) {
+            if (childElement.classList.contains(imageAddPhotoAttribute.class)) {
+                /* Remplace l'ancienne image par celle sélectionnée dans l'input */
+                childElement.src = URL.createObjectURL(photo);
+                /* on ajoute une class pour modifier le CSS */
+                childElement.classList.add("img-add-photo");
+                /* on libère l'URL objet de la mémoire du navigateur */
+                childElement.onload = () => URL.revokeObjectURL(childElement.src);
+            } else {
+                childElement.style.display = "none";
+            }
+        }
+    }
+
+    console.log("file : ", photo);
+    console.log("type : ", photo.type);
 }

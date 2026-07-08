@@ -5,7 +5,7 @@
  *********************************************************************************/
 
 
-/* Constantes de gestions de l'élement login/logout du Header */
+/* Class et texte du lien login/logout du Header */
 export const login = {
     texte: "login",
     class: "js-login"
@@ -16,8 +16,7 @@ export const logout = {
     class: "js-logout"
 };
 
-/* Constantes de gestion des class et 
-texte du bouton de la modale suivant la page */
+/* Class et texte du bouton ADD ou Submit de la modale */
 export const addWork = {
     texte: "Ajouter une photo",
     class: "js-addWork"
@@ -28,8 +27,7 @@ export const submitPost = {
     class: "js-submit-post"
 };
 
-/* Constantes de gestion des class du bloc principal 
-de la modale suivant la page */
+/* Class du modal-main suivant la page delete ou post */
 export const deleteWorks = {
     texte: null,
     class: "modal-delete-work"
@@ -40,19 +38,19 @@ export const postWorks = {
     class: "modal-post-work"
 };
 
-/* Constantes de gestions des titres des pages de la modal */
+/* Titres des pages de la modal */
 export const modalTitle = {
     deleteWorks: "Galerie photo",
     postWorks: "Ajout photo"
 };
 
-/* Constantes de gestions des class des pages de la modal */
+/* Class des pages de la modal */
 export const modalPages = {
     delete: "deleteWork",
     add: "addWork"
 }
 
-/* Constantes des icones Buttons */
+/* Attributs des icones Buttons */
 export const deleteButton = {
     classBouton: "logo-delete-work",
     classIcone: "fa-solid fa-trash-can",
@@ -70,3 +68,4 @@ export const closeButton = {
     classIcone: "fa-solid fa-xmark",
     ariaLabel: "Close page"
 }
+

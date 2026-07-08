@@ -63,41 +63,45 @@ export function generateEditElement() {
 /**
  * Cette fonction reçoit un élément lien en paramètre et ouvre la modale correspondante. 
  * Elle initialise les écouteurs pour la fermeture de la modale.
+ * @param {event} event : reçoit l'evenement du clik sur le lien d'ouverture de la podal
  * @param {HTMLElement} lienElement : le lien ouvrant la modale dont l'ID est dans l'attribut href
  */
 function modalOpeningManagement(event, lienElement) {
-    // annulation du comportement par défaut
+    /* annulation du comportement par défaut */
     event.preventDefault();
 
-    // on récupère l'ID de la modale
+    /* on récupère l'ID de la modale */
     const idModal = lienElement.getAttribute("href");
-    // on récupère l'élément HTML correspondant à la modale
+    /* on récupère l'élément HTML correspondant à la modale */
     const targetModal = document.querySelector(idModal);
-    // on appelle la fonction d'affichage de la modale
+    /* on appelle la fonction d'affichage de la modale */
     openModal(targetModal);
 
-    /* on appelle la fonction qui applique un écouteur permettant 
-    de fermer la modale */
-    closeModalEventListener(targetModal, targetModal)
+    /* on crée une table qui va stocker les éléments 
+    qui au click fermeront la modale */
+    let listElementCloseModal = [targetModal]
 
-    /* On vérifie si le bouton n'est pas déjà créer */
+    /* On vérifie si le bouton ClosCross n'est pas déjà créer */
     if (targetModal.querySelector(`[aria-label="${closeButton.ariaLabel}"]`) === null) {
-        /* on crée le logo permettant de fermer la modale et 
+        /* on crée le bouton ClosCross permettant de fermer la modale et
         on l'insère avant le titre de la modale */
         let targetClosCross = createIconeBouton(closeButton.classBouton, closeButton.classIcone, closeButton.ariaLabel);
         targetModal.querySelector("h2").before(targetClosCross);
-        /* on appelle la fonction qui applique un écouteur permettant 
-        de fermer la modale */
-        closeModalEventListener(targetClosCross, targetModal)
+        /* on ajoute l'élément à la table CloseModal */
+        listElementCloseModal.push(targetClosCross);
     }
 
-    // on stop la propagation de l'écouteur qui ferme la modale pour la partie fenêtre de gestion
+    /* pour chaque élément du tableau, on appelle la fonction qui 
+    applique un écouteur permettant de fermer la modale */
+    listElementCloseModal.forEach(element => closeModalEventListener(element, targetModal))
+
+    /* on stop la propagation de l'écouteur qui ferme la modale pour la partie fenêtre de gestion */
     const modalWrapper = document.querySelector(".modal-wrapper");
     modalWrapper.addEventListener("click", (event) => event.stopPropagation());
 
-    // Récupération de l'élément du DOM qui accueillera les oeuvres
+    /* Récupération de l'élément du DOM qui accueillera les oeuvres */
     const modalDivMain = document.querySelector("#modalGestion .modal-main");
-    // on appelle la fonction qui génère la gallerie
+    /* on appelle la fonction qui génère la gallerie */
     generateEditGallery(modalDivMain);
 }
 
@@ -133,6 +137,7 @@ export function changeModalPage(modalElement, nameModalPage) {
         previousModalPageEventListener(buttonArrow);
 
         generateEditPostWorks(modalDivMain);
+
     } else {
         /* on modifie le titre */
         modalH2.textContent = modalTitle.deleteWorks;
