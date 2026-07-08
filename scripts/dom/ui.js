@@ -103,3 +103,35 @@ export function removeElementBydataId(balise, dataId) {
     // on supprime l'ensemble des éléments
     listeDeleteElement.forEach(element => element.remove())
 }
+
+/**
+ * Cette fonction assigne à l'élement HTML reçu en paramètre la liste d'attribut reçu en paramètre
+ * @param {object} listAttribute : liste des attributs de l'élément
+ * @param {HTMLElement} elementHTML : élément cible pour les attributs
+ */
+export function elementSetAttribute(listAttribute, elementHTML) {
+
+    /* on ajoute les attributs à l'élément input */
+    for (const [nom, valeur] of Object.entries(listAttribute)) {
+        elementHTML.setAttribute(nom, valeur);
+    }
+}
+
+/**
+ * Cette fonction crée un élément HTML du type renseigné en paramètre,
+ * elle ajoute les attributs et l'ajoute à la liste des élément fils de sa balise parents
+ * @param {string} typeElement : nom de la balise de l'élément
+ * @param {object} objectAttribut : objet regroupant les attributs
+ * @param {string} text : texte de l'élément, null si non renseigné
+ * @returns {HTMLElement[]} le tableau des éléments enfants incrémenté du nouvel élément
+ */
+export function createElement(typeElement, objectAttribut, text = null) {
+    /* on crée l'élément */
+    let element = document.createElement(typeElement);
+    /* on ajoute le texte si non null */
+    if (text !== null) element.textContent = text;
+    /* on ajoute les attributs à l'élément input */
+    elementSetAttribute(objectAttribut, element);
+
+    return element;
+}

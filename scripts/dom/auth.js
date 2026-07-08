@@ -7,7 +7,7 @@
 
 import { changeClass } from "./ui.js";
 import { addBlackBarEditMode, removeBlackBarEditMode } from "./ui.js";
-import { generateEditElement, removeEditElement } from "./modal.js";
+import { generateEditElement, removeEditElement } from "./modal/modal.js";
 import { login, logout } from "../config/constants.js";
 
 /**
@@ -18,11 +18,17 @@ import { login, logout } from "../config/constants.js";
  * @param {string} targetPage : Nom du fichier correspondant à la page cible.
  */
 export function redirectPage(currentPage, targetPage) {
-    // Récupération de l'URL actuelle
+    // on récupère l'URL actuelle de la page
     let currentAddress = document.URL;
-    // Réécriture de l'adresse cible
-    let targetAddress = currentAddress.replace(currentPage, targetPage);
-    // Rediraction de la page vers l'adresse cible
+    // on récupère la position du dernier slash
+    let indexLastSlash = currentAddress.lastIndexOf("/");
+    // on récupère le chemin actuel de la page
+    let currentPath = currentAddress.slice(0, indexLastSlash + 1);
+
+    // on réécrit de l'adresse cible
+    let targetAddress = currentPath + targetPage;
+
+    // on redirige la page vers l'adresse cible
     document.location.assign(targetAddress);
 }
 

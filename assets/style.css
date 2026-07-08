@@ -273,14 +273,28 @@ li:hover {
 }
 
 /* Gestion de la modale d'édition*/
+.logo {
+	background: transparent;
+	border: none;
+	padding: 0;
+	margin: 0;
+	cursor: pointer;
+	width: 24px;
+	height: 24px;
+}
+
 .logo-close-cross {
 	position: absolute;
 	top: 26px;
 	right: 30px;
+	font-size: 24px;
 }
 
-.logo-close-cross img {
-	width: 24px;
+.logo-previous-page {
+	position: absolute;
+	top: 26px;
+	left: 30px;
+	font-size: 24px;
 }
 
 .separator {
@@ -325,26 +339,37 @@ li:hover {
 }
 
 .modal-wrapper .button {
+	min-width: 237px;
 	font-size: 14px;
 	padding: 10px 50px;
 }
 
-.modal-gallery {
+.modal-main {
 	width: 100%;
 	height: 75%;
 	overflow: auto;
+}
+
+.modal-delete-work {
 	display: grid;
 	grid-template-columns: repeat(5, 1fr);
 	gap: 10px;
 }
 
-.modal-gallery figure {
+.modal-delete-work figure {
 	position: relative;
 }
 
-.modal-gallery img {
+.modal-delete-work img {
 	width: 75px;
 	object-fit: cover;
+}
+
+.modal-post-work,
+.modal-post-work div {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
 }
 
 .logo-delete-work {
@@ -428,7 +453,8 @@ li:hover {
 }
 
 #contact form,
-#login form {
+#login form,
+.modal-post-work form {
 	text-align: left;
 	margin-top: 30px;
 	display: flex;
@@ -436,7 +462,9 @@ li:hover {
 }
 
 #contact input,
-#login input {
+#login input,
+.modal-post-work div input,
+.modal-post-work div select {
 	height: 50px;
 	font-size: 1.2em;
 	border: none;
@@ -453,8 +481,46 @@ li:hover {
 	padding: 10px 0;
 }
 
+.add-photo {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 40%;
+	background-color: #E8F1F6;
+	padding: 13px 0px;
+}
+
+.info-add-photo {
+	margin-bottom: 6px;
+}
+
+.button-add-image {
+	display: flex;
+	width: 107px;
+	justify-content: center;
+	align-items: center;
+	font-family: sans-serif;
+	font-weight: 700;
+	border-radius: 60px;
+	padding: 0px 33px;
+	background-color: #CBD6DC;
+	height: 37px;
+	color: #306685;
+}
+
+.modal-post-work .button-add-image {
+	margin: 0;
+}
+
+.categories {
+	margin-bottom: 45px;
+}
+
 #contact label,
-#login label {
+#login label,
+.modal-post-work div label {
 	margin: 2em 0 1em 0;
 }
 
