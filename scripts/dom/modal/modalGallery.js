@@ -40,7 +40,7 @@ export async function generateEditGallery(divModalGallery) {
  * l'ensemble des oeuvres correspondant à cette id du site
  * @param {number} id : id de l'oeuvre à supprimer
  */
-async function deleteWorkManagement(id) {
+export async function deleteWorkManagement(id) {
 
     // on appelle la fonction qui va requeter l'API pour supprimer 
     // l'élement correspondant à l'id reçu en entrée

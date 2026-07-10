@@ -5,6 +5,8 @@
  *********************************************************************************/
 
 
+/* -------------- Header  -------------- */
+
 /* Class et texte du lien login/logout du Header */
 export const login = {
     texte: "login",
@@ -16,6 +18,8 @@ export const logout = {
     class: "js-logout"
 };
 
+/* -------------- Modale suivant la page delete ou post Work  -------------- */
+
 /* Class et texte du bouton ADD ou Submit de la modale */
 export const addWork = {
     texte: "Ajouter une photo",
@@ -24,10 +28,10 @@ export const addWork = {
 
 export const submitPost = {
     texte: "Valider",
-    class: "js-submit-post"
+    class: "submit-disabled"
 };
 
-/* Class du modal-main suivant la page delete ou post */
+/* Class du modal-main */
 export const deleteWorks = {
     texte: null,
     class: "modal-delete-work"
@@ -50,22 +54,12 @@ export const modalPages = {
     add: "addWork"
 }
 
-/* Attributs des icones Buttons */
-export const deleteButton = {
-    classBouton: "logo-delete-work",
-    classIcone: "fa-solid fa-trash-can",
-    ariaLabel: "Delete work"
-}
+export const imageTypeAllowed = ["image/jpeg", "image/png"];
+export const imageMaxSize = 4; /* En Mo */
+export const ONE_MO = 1024 * 1024;
 
-export const previousButton = {
-    classBouton: "logo logo-previous-page",
-    classIcone: "fa-solid fa-arrow-left",
-    ariaLabel: "Previous page"
-}
-
-export const closeButton = {
-    classBouton: "logo logo-close-cross",
-    classIcone: "fa-solid fa-xmark",
-    ariaLabel: "Close page"
+export const imageRestriction = {
+    "fileType": imageTypeAllowed,
+    "size": imageMaxSize
 }
 

@@ -4,8 +4,17 @@
  * 
  *********************************************************************************/
 
-import { getWorks } from "./api.js";
+import { getWorks, getCategories } from "./api.js";
 import { generateGallery } from "../dom/gallery.js";
+import {
+    pInfoTitleError,
+    inputFileError,
+    categoriesError
+} from "../config/text.js";
+import {
+    imageRestriction,
+    ONE_MO
+} from "../config/constants.js";
 /**
  * 
  * @param {object} works : [{
@@ -98,6 +107,83 @@ export function validatePassword(password) {
         - simple du type 'password', 'PASSWORD' ou suite de nombre
         - qui commence par $, qui contient un espace, ou les symboles du type <,>,',",;,/
         */
-    let ppasswordRegExp = new RegExp("(?!^password$|^PASSWORD$|^0?1?2?3?4?5?6?7?8?9?$|admin|^\\$)^[a-zA-Z0-9!#$@_&+?%-]*$")
-    return ppasswordRegExp.test(password)
+    let passwordRegExp = new RegExp("(?!^password$|^PASSWORD$|^0?1?2?3?4?5?6?7?8?9?$|admin|^\\$)^[a-zA-Z0-9!#$@_&+?%-]*$")
+    return passwordRegExp.test(password)
+}
+
+
+/**
+ * Cette fonction reçoit un titre d'oeuvre en entrée et 
+ * renvoie les erreurs identifiées
+ * @param {HTMLElement} title 
+ * @returns {string[]} : tableau des erreurs relevées
+ */
+export function validateTitle(title) {
+
+    const errors = [];
+
+    /* si le champ est vide on crée une exception */
+    if (title.trim() === "") {
+        errors.push(pInfoTitleError.vide)
+    }
+
+    /* Initialisation de l'Expression Régulière 
+    Elle refuse les mots contenant des caractères spéciaux
+    */
+    let titleRegExp = new RegExp("^[a-zA-Z0-9\\s'’\"«».,:;!?()°\\-_\\/&]*$")
+    if (!titleRegExp.test(title)) {
+        errors.push(pInfoTitleError.errorRegExp);
+    }
+
+    return errors;
+}
+
+
+/**
+ * Cette fonction reçoit un fichier en entrée et 
+ * renvoie les erreurs identifiées
+ * @param {file} image 
+ * @returns {string[]} : tableau des erreurs relevées
+ */
+export function validateImage(image) {
+
+    const errors = [];
+    if (!image) {
+        errors.push(inputFileError.etatNull)
+    } else {
+        /* si l'image n'est pas au format .jpg ou .png on crée une exception */
+        if (imageRestriction.fileType.indexOf(image.type) === -1) {
+            errors.push(inputFileError.format)
+        }
+        /* si le poid de l'image est supérieur à la limite fixée */
+        if (image.size > imageRestriction.size * ONE_MO) {
+            errors.push(inputFileError.size);
+        }
+    }
+
+    return errors;
+}
+
+
+/**
+ * Cette fonction reçoit un id et vérifie qu'il soit entier 
+ * et qu'il soit présent dans la liste des id des catégories
+ * sinon il retrourne l'erreur
+ * @param {string} id 
+ * @returns {string[]} : tableau des erreurs relevées
+ */
+export async function validateCategories(id) {
+
+    const errors = [];
+
+    /* on récupère la liste des catégories */
+    const categories = await getCategories();
+    const categorieId = Number(id);
+
+    /* si l'id n'est pas un entier ou s'il n'est pas dans la liste des id des catégories */
+    if (!Number.isInteger(categorieId) || !categories.some(category => category.id === categorieId)) {
+        errors.push(categoriesError.incorrectData)
+    }
+
+    return errors;
 }

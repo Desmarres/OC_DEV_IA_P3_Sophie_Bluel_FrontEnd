@@ -463,15 +463,14 @@ li:hover {
 
 #contact input,
 #login input,
-.modal-post-work div input,
-.modal-post-work div select {
+.form-element {
 	height: 50px;
 	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
-#login .error {
+.error {
 	box-shadow: 0px 4px 14px rgba(255, 0, 0);
 }
 
@@ -550,6 +549,10 @@ input[type="submit"] {
 	width: 180px;
 	text-align: center;
 	border-radius: 60px;
+}
+
+.submit-disabled {
+	background-color: #A7A7A7;
 }
 
 footer {

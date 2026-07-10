@@ -6,17 +6,31 @@
  *********************************************************************************/
 
 import { createElement } from "../ui.js";
-
 import {
     createBlocAddPhoto,
     createBlocDivTitre,
     createBlocDivCategories
 } from "./builder.js";
-
 import {
     divPhotoAttribute,
-    divCategoriesAttribute
+    divCategoriesAttribute,
+    pInfoTitleErrorAttribute,
+    inputFileAttribute,
+    inputTitreAttribute,
+    selectCategoriesAttribute
 } from "../../config/attributs.js"
+import {
+    pInfoTitleError,
+    inputFileError,
+    categoriesError
+} from "../../config/text.js";
+import {
+    validateTitle,
+    validateImage,
+    validateCategories
+} from "../../services/data.js";
+import { postWork } from "../../services/api.js";
+import { addWorkGallery } from "../gallery.js";
 
 /**
  * Cette fonction récupère le bloc principale de la modale et 
@@ -61,7 +75,48 @@ export async function generateEditPostWorks(divModalPostWork) {
 
 }
 
+/**
+ * Cette fonction contrôle les données saisies sur la page Ajout Photo et
+ * appelle la fonction qui va envoyer la requête à l'API ou
+ * affiche les erreurs afin que l'utilisateur puisse les corriger
+ */
+export async function validatePostWork() {
 
-export function validatePostWork() {
-    console.log("Ajout d'une oeuvre");
+
+    /* on initialise le tableau des erreurs */
+    let erreurs = [];
+
+    /* on récupère l'input type file et 
+    on appelle la fonction qui va vérfier la conformité de la saisie */
+    const inputFileElement = document.getElementById(inputFileAttribute.id);
+    erreurs.push(...validateImage(inputFileElement.files[0]));
+
+    /* on récupère l'input du titre et
+    on appelle la fonction qui va vérfier la conformité de la saisie */
+    const inputTitleElement = document.getElementById(inputTitreAttribute.id);
+    erreurs.push(...validateTitle(inputTitleElement.value));
+
+    /* on récupère la liste déroulante et
+    on appelle la fonction qui va vérfier la conformité de la saisie */
+    const selectElement = document.getElementById(selectCategoriesAttribute.id);
+    erreurs.push(...await validateCategories(selectElement.value));
+
+    if (erreurs.length === 0) {
+
+        /* on initialise l'oeuvre */
+        let work = {
+            "image": inputFileElement.files[0],
+            "title": inputTitleElement.value,
+            "category": selectElement.value
+        };
+
+        /* on appelle la fonction qui va requêter l'API */
+        const reponse = await postWork(work);
+        /* Si nous avons une réussite pour la requête alors 
+        nous appellons la fonction qui va ajouter l'oeuvre à la gallery */
+        if (reponse.etat) addWorkGallery(reponse.work);
+        console.log(reponse);
+    } else {
+        erreurs.forEach(erreur => console.log(erreur));
+    }
 }

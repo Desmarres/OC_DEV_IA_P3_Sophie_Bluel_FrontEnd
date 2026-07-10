@@ -16,10 +16,13 @@ import {
     deleteWorks,
     postWorks,
     modalTitle,
-    modalPages,
+    modalPages
+} from "../../config/constants.js";
+
+import {
     previousButton,
     closeButton
-} from "../../config/constants.js";
+} from "../../config/attributs.js";
 
 import { generateEditGallery } from "./modalGallery.js";
 
@@ -131,12 +134,16 @@ export function changeModalPage(modalElement, nameModalPage) {
         /* on change les classes du block principal de la modale */
         changeClass(modalDivMain, deleteWorks.class, postWorks.class);
 
+
         let buttonArrow = createIconeBouton(previousButton.classBouton, previousButton.classIcone, previousButton.ariaLabel);
         modalH2.before(buttonArrow);
 
         previousModalPageEventListener(buttonArrow);
 
         generateEditPostWorks(modalDivMain);
+
+
+
 
     } else {
         /* on modifie le titre */

@@ -40,7 +40,7 @@ export function generateGallery(works) {
 }
 
 /**
- * Cette fonction reçoit une ouevre en entrée et 
+ * Cette fonction reçoit une oeuvre en entrée et 
  * retourne l'élément figure correspondant à l'oeuvre
  * @param {object} work :{  
                             "id": number,
@@ -181,4 +181,31 @@ function changeButtonSelected(listeButtonElement, dataSetId) {
 
         }
     }
+}
+
+/**
+ * cette fonction reçoit une oeuvre en paramètre et 
+ * l'insère à la fin de la gallerie
+ * @param {object} work  
+                            "id": number,
+                            "title": string,
+                            "imageUrl": string,
+                            "categoryId": number,
+                            "userId": number,
+                            "category": object  {
+                                                "id": number,
+                                                "name": string
+                                                }
+                            }
+ */
+export function addWorkGallery(work) {
+
+    /* créeation du nouvel élément HTML */
+    const figureElement = createWorkGallery(work);
+
+    /* Récupération de l'élément du DOM qui accueillera les oeuvres */
+    const divGallery = document.querySelector("#portfolio .gallery");
+
+    /* on rattache la figure à la div gallery */
+    divGallery.appendChild(figureElement);
 }

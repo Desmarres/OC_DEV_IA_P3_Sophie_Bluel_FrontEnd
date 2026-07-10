@@ -6,11 +6,8 @@
  *********************************************************************************/
 
 import { createElement } from "../ui.js";
-
 import { getCategories } from "../../services/api.js";
-
-import { deleteButton } from "../../config/constants.js";
-
+import { deleteButton } from "../../config/attributs.js";
 import {
     imageAddPhotoAttribute,
     inputFileAttribute,
@@ -21,15 +18,14 @@ import {
     labelCategoriesAttribute,
     selectCategoriesAttribute
 } from "../../config/attributs.js";
-
 import {
     labelFileText,
     pInfoPhotoText,
     labelTitreText,
     labelCategoriesText
 } from "../../config/text.js";
-
 import { addPhotoManagement } from "./events.js";
+import { deleteWorkManagement } from "./modalGallery.js";
 
 
 /**
@@ -90,6 +86,14 @@ export function createWorkEditMode(work) {
     return figureElement;
 }
 
+/**
+ * Cette fonction reçoit des nom de class et de label et 
+ * retourne un élément HTML de type bouton avec un icone fontAwesome
+ * @param {string} classBouton 
+ * @param {string} classIcone 
+ * @param {string} ariaLabel 
+ * @returns {HTMLElement} : le bputon avec l'isone à l'intérieur
+ */
 export function createIconeBouton(classBouton, classIcone, ariaLabel) {
 
     /* on crée un objet regroupant tous les attributs du boutton*/

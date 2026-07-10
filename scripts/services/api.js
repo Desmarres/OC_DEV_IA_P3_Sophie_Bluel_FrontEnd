@@ -8,7 +8,7 @@
 /**
  * Cette fonction récupère l'ensemble des oeuvres du serveur en requêtant l'API
  * Elle retourne le résultat sous forme d'un tableau d'objet
- * @returns {object} : [{
+ * @returns {Promise<object>} : [{
                         "id": number,
                         "title": string,
                         "imageUrl": string,
@@ -33,7 +33,7 @@ export async function getWorks() {
 /**
  * Cette fonction récupère l'ensemble des catégories disponibles sur le serveur
  * Elle retourne le résultat sous forme d'un objet
- * @returns {object} : [{
+ * @returns {Promise<object>} : [{
                         "id": number,
                         "name": string
                         }]
@@ -52,7 +52,7 @@ export async function getCategories() {
  * Elle retourne le résultat sous forme d'un objet
  * @param {string} email 
  * @param {string} password 
- * @returns {object} : [{
+ * @returns {Promise<object>} : [{
                         "id": number,
                         "token": string
                         }]
@@ -99,7 +99,7 @@ export async function postLogin(email, password) {
  * Cette fonction reçoit l'id d'une oeuvre à supprimer et 
  * retourne un objet avec les réponses du serveur sur la réussite de la requête
  * @param {number} id : id de l'oeuvre à supprimer
- * @returns {object} : {
+ * @returns {Promise<object>} : {
         "etat": reponse.ok,
         "statusText": reponse.statusText
     }
@@ -126,4 +126,47 @@ export async function deleteWork(id) {
     };
 
     return deleteReponse;
+}
+
+/**
+ * Cette fonction reçoit une oeuvre en paramètre et envoie une requête d'ajout au serveur
+ * Elle retourne la réponse du serveur.
+ * @param {object} work : {
+                            "title": string,
+                            "image": file,
+                            "category": number
+                            } 
+ * @returns {Promise<object>} : {
+        "etat": reponse.ok,
+        "statusText": reponse.statusText
+    }
+ */
+export async function postWork(work) {
+
+    /* récupération du token d'identification */
+    const token = localStorage.getItem('token');
+
+    /* On ajoute les éléments à un objet type FormData */
+    const formData = new FormData();
+    formData.append("title", work.title);
+    formData.append("image", work.image);
+    formData.append("category", work.category);
+
+    /* appel de l'API avec la méthode DELETE pour supprimer l'élément avec l'id reçu en paramètre */
+    const reponse = await fetch(`http://localhost:5678/api/works`, {
+        method: "POST",
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+        body: formData
+    });
+
+    /* préparation de la réponse avec l'état en booléan et la description */
+    const postReponse = {
+        "etat": reponse.ok,
+        "statusText": reponse.statusText,
+        "work": reponse.ok ? await reponse.json() : null
+    };
+
+    return postReponse;
 }
