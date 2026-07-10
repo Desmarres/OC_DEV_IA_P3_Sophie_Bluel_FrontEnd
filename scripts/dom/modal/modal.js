@@ -9,7 +9,6 @@ import {
     changeClass,
     createElement
 } from "../ui.js";
-
 import {
     addWork,
     submitPost,
@@ -18,18 +17,17 @@ import {
     modalTitle,
     modalPages
 } from "../../config/constants.js";
-
 import {
     previousButton,
     closeButton
 } from "../../config/attributs.js";
-
 import { generateEditGallery } from "./modalGallery.js";
-
 import { generateEditPostWorks } from "./form.js";
-
-import { createIconeBouton } from "./builder.js";
-
+import {
+    createIconeBouton,
+    buttonActivated,
+    buttonDisabled
+} from "./builder.js";
 import {
     buttonModalManagement,
     closeModalEventListener,
@@ -46,11 +44,11 @@ export function generateEditElement() {
 
     // on crée le lien vers l'ancre du bloc modal
     let lienElement = document.createElement("a");
-    lienElement.classList.add("edit")
-    lienElement.href = "#modalGestion"
+    lienElement.classList.add("edit");
+    lienElement.href = "#modalGestion";
 
     //on appelle la fonction qui va créer les éléments HTML interne à la balise crée
-    createBlockModifier(lienElement, "modifier")
+    createBlockModifier(lienElement, "modifier");
 
     // on ajoute le bloc après le titre
     titreElement.insertAdjacentElement("afterend", lienElement);
@@ -82,7 +80,7 @@ function modalOpeningManagement(event, lienElement) {
 
     /* on crée une table qui va stocker les éléments 
     qui au click fermeront la modale */
-    let listElementCloseModal = [targetModal]
+    let listElementCloseModal = [targetModal];
 
     /* On vérifie si le bouton ClosCross n'est pas déjà créer */
     if (targetModal.querySelector(`[aria-label="${closeButton.ariaLabel}"]`) === null) {
@@ -96,7 +94,7 @@ function modalOpeningManagement(event, lienElement) {
 
     /* pour chaque élément du tableau, on appelle la fonction qui 
     applique un écouteur permettant de fermer la modale */
-    listElementCloseModal.forEach(element => closeModalEventListener(element, targetModal))
+    listElementCloseModal.forEach(element => closeModalEventListener(element, targetModal));
 
     /* on stop la propagation de l'écouteur qui ferme la modale pour la partie fenêtre de gestion */
     const modalWrapper = document.querySelector(".modal-wrapper");
@@ -127,22 +125,24 @@ export function changeModalPage(modalElement, nameModalPage) {
     const modalButton = modalElement.querySelector(".button");
 
     if (nameModalPage === modalPages.add) {
+
+        /* on appelle la fonction qui va créer les champs de saisies */
+        generateEditPostWorks(modalDivMain, modalDivMain);
+
         /* on modifie le titre */
         modalH2.textContent = modalTitle.postWorks;
-        /* on change les classes et le texte du bouton */
-        changeClass(modalButton, addWork.class, submitPost.class, submitPost.texte);
-        /* on change les classes du block principal de la modale */
-        changeClass(modalDivMain, deleteWorks.class, postWorks.class);
-
-
+        /* on crée la fleche de retour à la page précédente */
         let buttonArrow = createIconeBouton(previousButton.classBouton, previousButton.classIcone, previousButton.ariaLabel);
         modalH2.before(buttonArrow);
-
+        /* on appelle la fonction qui va écouter le boutton */
         previousModalPageEventListener(buttonArrow);
 
-        generateEditPostWorks(modalDivMain);
-
-
+        /* on change les classes du block principal de la modale */
+        changeClass(modalDivMain, deleteWorks.class, postWorks.class);
+        /* on change les classes et le texte du bouton */
+        changeClass(modalButton, addWork.class, submitPost.class, submitPost.texte);
+        /* on initialise l'état du bouton */
+        buttonDisabled(modalButton);
 
 
     } else {
@@ -150,6 +150,7 @@ export function changeModalPage(modalElement, nameModalPage) {
         modalH2.textContent = modalTitle.deleteWorks;
         /* on change les classes et le texte du bouton */
         changeClass(modalButton, submitPost.class, addWork.class, addWork.texte);
+        buttonActivated(modalButton);
         /* on change les classes du block principal de la modale */
         changeClass(modalDivMain, postWorks.class, deleteWorks.class);
 
@@ -157,7 +158,7 @@ export function changeModalPage(modalElement, nameModalPage) {
         const buttonArrow = modalElement.querySelector(".logo-previous-page");
         if (buttonArrow !== null) buttonArrow.remove();
 
-        generateEditGallery(modalDivMain)
+        generateEditGallery(modalDivMain);
     }
 }
 

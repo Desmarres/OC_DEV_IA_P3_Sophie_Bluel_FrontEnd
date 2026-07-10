@@ -480,6 +480,10 @@ li:hover {
 	padding: 10px 0;
 }
 
+.errorText {
+	color: rgba(255, 0, 0);
+}
+
 .add-photo {
 	display: flex;
 	flex-direction: column;
@@ -551,8 +555,12 @@ input[type="submit"] {
 	border-radius: 60px;
 }
 
-.submit-disabled {
+.disabled {
 	background-color: #A7A7A7;
+}
+
+.hidden {
+	display: none;
 }
 
 footer {

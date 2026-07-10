@@ -7,7 +7,6 @@
 
 import { createElement } from "../ui.js";
 import { getCategories } from "../../services/api.js";
-import { deleteButton } from "../../config/attributs.js";
 import {
     imageAddPhotoAttribute,
     inputFileAttribute,
@@ -16,7 +15,8 @@ import {
     labelTitreAttribute,
     inputTitreAttribute,
     labelCategoriesAttribute,
-    selectCategoriesAttribute
+    selectCategoriesAttribute,
+    deleteButton
 } from "../../config/attributs.js";
 import {
     labelFileText,
@@ -26,7 +26,8 @@ import {
 } from "../../config/text.js";
 import { addPhotoManagement } from "./events.js";
 import { deleteWorkManagement } from "./modalGallery.js";
-
+import { validateButtonManagement } from "./form.js";
+import { errorClass } from "../../config/constants.js";
 
 /**
  * Cette fonction reçoit une ouevre en entrée et 
@@ -60,14 +61,14 @@ export function createWorkEditMode(work) {
     const imageAttribute = {
         "src": work.imageUrl,
         "alt": work.title
-    }
+    };
     /* on appelle la fonction qui va créer l'élément image et 
     on l'ajoute aux enfants de l'élement figure*/
     listeFigureElement.push(createElement("img", imageAttribute));
 
 
     /* on appelle la fonction qui va créer le bouton délete avec l'icone*/
-    let buttonElement = createIconeBouton(deleteButton.classBouton, deleteButton.classIcone, deleteButton.ariaLabel)
+    let buttonElement = createIconeBouton(deleteButton.classBouton, deleteButton.classIcone, deleteButton.ariaLabel);
     /* on l'ajoute aux enfants de l'élement figure */
     listeFigureElement.push(buttonElement);
 
@@ -101,7 +102,7 @@ export function createIconeBouton(classBouton, classIcone, ariaLabel) {
         "type": "button",
         "aria-label": ariaLabel,
         "class": classBouton
-    }
+    };
     /* on appelle la fonction qui va créer l'élément boutton*/
     let buttonElement = createElement("button", buttonAttribute);
 
@@ -109,7 +110,7 @@ export function createIconeBouton(classBouton, classIcone, ariaLabel) {
     const iconeAttribute = {
         "class": classIcone,
         "aria-hidden": ""
-    }
+    };
     /* on appelle la fonction qui va créer l'élément fontawesome supprimer*/
     buttonElement.appendChild(createElement("i", iconeAttribute));
 
@@ -130,7 +131,7 @@ export function createBlocAddPhoto() {
     const imageElement = createElement("img", imageAddPhotoAttribute);
     /* on ajoute un écouteur click sur l'image pour déclancher l'input */
     imageElement.addEventListener("click", () => {
-        document.getElementById(inputFileAttribute.id).click()
+        document.getElementById(inputFileAttribute.id).click();
     });
     /* on l'ajoute à la liste des enfants du bloc Div Photo */
     listeChildElementDivPhoto.push(imageElement);
@@ -142,7 +143,11 @@ export function createBlocAddPhoto() {
     /* on appelle la fonction qui va créer l'élément input type file*/
     const inputElement = createElement("input", inputFileAttribute);
     /* on ajoute un écouteur change */
-    inputElement.addEventListener("change", () => addPhotoManagement(inputElement.files[0]));
+    inputElement.addEventListener("change", () => {
+        addPhotoManagement(inputElement.files[0]);
+        validateButtonManagement();
+        removeErrorMessage(inputElement);
+    });
 
     /* on l'ajoute à la liste des enfants du bloc Div Photo */
     listeChildElementDivPhoto.push(inputElement);
@@ -168,7 +173,12 @@ export function createBlocDivTitre() {
     listeChildElementDivTitre.push(createElement("label", labelTitreAttribute, labelTitreText));
 
     /* on appelle la fonction qui va créer l'élément input type file*/
-    listeChildElementDivTitre.push(createElement("input", inputTitreAttribute));
+    const inputTitreElement = createElement("input", inputTitreAttribute);
+    inputTitreElement.addEventListener("focus", () => {
+        validateButtonManagement();
+        removeErrorMessage(inputTitreElement);
+    });
+    listeChildElementDivTitre.push(inputTitreElement);
 
     return listeChildElementDivTitre
 }
@@ -186,7 +196,12 @@ export async function createBlocDivCategories() {
     listeChildElementDivCategories.push(createElement("label", labelCategoriesAttribute, labelCategoriesText));
 
     /* on appelle la fonction qui va créer l'élément input type file*/
-    listeChildElementDivCategories.push(createElement("select", selectCategoriesAttribute));
+    const selectCategoriesElement = createElement("select", selectCategoriesAttribute);
+    selectCategoriesElement.addEventListener("change", () => {
+        validateButtonManagement();
+        removeErrorMessage(selectCategoriesElement);
+    });
+    listeChildElementDivCategories.push(selectCategoriesElement);
 
     /* on appelle la fonction qui va créer les options */
     let listeChildElementSelect = await createBlocSelect();
@@ -234,4 +249,64 @@ export async function createBlocSelect() {
 
 
     return listeChildElementSelect
+}
+
+/**
+ * Cette fonction désactive le bouton et ajoute la class pour le griser
+ * @param {HTMLElement} button 
+ */
+export function buttonDisabled(button) {
+    button.disabled = true;
+    button.classList.add("disabled");
+}
+
+/**
+ * Cette fonction active le bouton et enlève la class qui le grisait
+ * @param {HTMLElement} button 
+ */
+export function buttonActivated(button) {
+    button.disabled = false;
+    button.classList.remove("disabled");
+}
+
+/**
+ * Cette fonction réinitialise les champs passés en paramètre
+ * @param {HTMLElement} inputFile 
+ * @param {HTMLElement} inputText 
+ * @param {HTMLElement} select 
+ */
+export function resetPostWork(inputFile, inputText, select) {
+
+    /* on réinitialise les champs */
+    inputFile.value = "";
+    inputText.value = "";
+    select.selectedIndex = 0;
+
+    /* on rappelle la fonction qui gère le bouton 
+    puis celle qui gère l'affichage de l'image */
+    validateButtonManagement();
+    addPhotoManagement(inputFile.files[0]);
+
+}
+
+/**
+ * Cette fonction reçoit un element en paramètre et 
+ * récupère les éléments frères qui suivent. 
+ * Il vérifie et supprime tous les éléments qui sont des messages d'erreur
+ * @param {HTMLElement} element 
+ */
+export function removeErrorMessage(element) {
+
+    /* on récupère les éléments frères qui suivent */
+    let listeElement = [];
+    let nextElement = element.nextElementSibling;
+    while (nextElement !== null) {
+        listeElement.push(nextElement);
+        nextElement = nextElement.nextElementSibling;
+    }
+
+    listeElement.forEach((element) => {
+        if (element.classList.contains(errorClass)) element.remove();
+    })
+
 }

@@ -15,6 +15,7 @@ import {
     imageRestriction,
     ONE_MO
 } from "../config/constants.js";
+import { inputFileAttribute, inputTitreAttribute, selectCategoriesAttribute } from "../config/attributs.js";
 /**
  * 
  * @param {object} works : [{
@@ -124,15 +125,21 @@ export function validateTitle(title) {
 
     /* si le champ est vide on crée une exception */
     if (title.trim() === "") {
-        errors.push(pInfoTitleError.vide)
+        errors.push({
+            "field": inputTitreAttribute.name,
+            "message": pInfoTitleError.vide
+        })
     }
 
     /* Initialisation de l'Expression Régulière 
     Elle refuse les mots contenant des caractères spéciaux
     */
-    let titleRegExp = new RegExp("^[a-zA-Z0-9\\s'’\"«».,:;!?()°\\-_\\/&]*$")
+    let titleRegExp = new RegExp("^[a-zA-Z0-9À-ÖØ-öø-ÿ\\s'’\"«».,:;!?()°\\-_\\/&]*$")
     if (!titleRegExp.test(title)) {
-        errors.push(pInfoTitleError.errorRegExp);
+        errors.push({
+            "field": inputTitreAttribute.name,
+            "message": pInfoTitleError.errorRegExp
+        });
     }
 
     return errors;
@@ -149,15 +156,24 @@ export function validateImage(image) {
 
     const errors = [];
     if (!image) {
-        errors.push(inputFileError.etatNull)
+        errors.push({
+            "field": inputFileAttribute.name,
+            "message": inputFileError.etatNull
+        })
     } else {
         /* si l'image n'est pas au format .jpg ou .png on crée une exception */
         if (imageRestriction.fileType.indexOf(image.type) === -1) {
-            errors.push(inputFileError.format)
+            errors.push({
+                "field": inputFileAttribute.name,
+                "message": inputFileError.format
+            })
         }
         /* si le poid de l'image est supérieur à la limite fixée */
         if (image.size > imageRestriction.size * ONE_MO) {
-            errors.push(inputFileError.size);
+            errors.push({
+                "field": inputFileAttribute.name,
+                "message": inputFileError.size
+            });
         }
     }
 
@@ -182,7 +198,10 @@ export async function validateCategories(id) {
 
     /* si l'id n'est pas un entier ou s'il n'est pas dans la liste des id des catégories */
     if (!Number.isInteger(categorieId) || !categories.some(category => category.id === categorieId)) {
-        errors.push(categoriesError.incorrectData)
+        errors.push({
+            "field": selectCategoriesAttribute.name,
+            "message": categoriesError.incorrectData
+        })
     }
 
     return errors;

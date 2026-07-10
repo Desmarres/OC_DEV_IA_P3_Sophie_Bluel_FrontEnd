@@ -9,14 +9,15 @@ import {
     closeModal,
     changeModalPage
 } from "./modal.js";
-
 import { validatePostWork } from "./form.js";
-
-import { modalPages } from "../../config/constants.js";
-
+import {
+    modalPages,
+    hiddenClass
+} from "../../config/constants.js";
 import {
     imageAddPhotoAttribute,
-    inputFileAttribute
+    inputFileAttribute,
+    newImageClass
 } from "../../config/attributs.js";
 
 /**
@@ -44,7 +45,7 @@ export function previousModalPageEventListener(element) {
     element.addEventListener("click", (event) => {
         // annulation du comportement par défaut
         event.preventDefault();
-        const modal = event.target.parentElement.parentElement
+        const modal = event.target.parentElement.parentElement;
         changeModalPage(modal, modalPages.delete);
     });
 }
@@ -58,7 +59,7 @@ export function previousModalPageEventListener(element) {
 export function buttonModalManagement(event) {
     // annulation du comportement par défaut
     event.preventDefault();
-    const modal = event.target.parentElement.parentElement
+    const modal = event.target.parentElement.parentElement;
     if (event.target.classList.contains("js-addWork")) {
         changeModalPage(modal, modalPages.add);
     } else {
@@ -66,13 +67,18 @@ export function buttonModalManagement(event) {
     }
 }
 
+/**
+ * Cette fonction reçoit un fichier en paramètre et l'affiche si c'est une image
+ * Sinon elle affiche l'image par defaut
+ * @param {file} photo
+ */
 export function addPhotoManagement(photo) {
+
+    /* on récupère le bloc div Add Photo */
+    const divAddPhotoElement = document.querySelector(".add-photo");
 
     // Vérifie s'il y a un un fichier du type image
     if (photo && photo.type.startsWith("image/")) {
-
-        /* on récupère le bloc div Add Photo */
-        const divAddPhotoElement = document.querySelector(".add-photo");
         /* on parcours ses enfants pour afficher l'image choisie et 
         faire diparaitre les autres élements */
         for (const childElement of divAddPhotoElement.children) {
@@ -80,15 +86,27 @@ export function addPhotoManagement(photo) {
                 /* Remplace l'ancienne image par celle sélectionnée dans l'input */
                 childElement.src = URL.createObjectURL(photo);
                 /* on ajoute une class pour modifier le CSS */
-                childElement.classList.add("img-add-photo");
+                childElement.classList.add(newImageClass);
                 /* on libère l'URL objet de la mémoire du navigateur */
                 childElement.onload = () => URL.revokeObjectURL(childElement.src);
             } else {
-                childElement.style.display = "none";
+                childElement.classList.add(hiddenClass);
+            }
+        }
+    } else {
+        /* on parcours ses enfants pour afficher l'image par défaut et 
+        faire apparaitre les autres élements */
+        for (const childElement of divAddPhotoElement.children) {
+            if (childElement.classList.contains(imageAddPhotoAttribute.class)) {
+                /* Replace l'image par défaut dans l'input */
+                childElement.src = imageAddPhotoAttribute.src;
+                /* on ajoute une class pour modifier le CSS */
+                childElement.classList.remove(newImageClass);
+                /* on libère l'URL objet de la mémoire du navigateur */
+                childElement.onload = () => URL.revokeObjectURL(childElement.src);
+            } else {
+                childElement.classList.remove(hiddenClass);
             }
         }
     }
-
-    console.log("file : ", photo);
-    console.log("type : ", photo.type);
 }

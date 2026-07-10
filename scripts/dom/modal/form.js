@@ -9,7 +9,11 @@ import { createElement } from "../ui.js";
 import {
     createBlocAddPhoto,
     createBlocDivTitre,
-    createBlocDivCategories
+    createBlocDivCategories,
+    buttonActivated,
+    buttonDisabled,
+    resetPostWork,
+    removeErrorMessage
 } from "./builder.js";
 import {
     divPhotoAttribute,
@@ -18,7 +22,7 @@ import {
     inputFileAttribute,
     inputTitreAttribute,
     selectCategoriesAttribute
-} from "../../config/attributs.js"
+} from "../../config/attributs.js";
 import {
     pInfoTitleError,
     inputFileError,
@@ -31,6 +35,7 @@ import {
 } from "../../services/data.js";
 import { postWork } from "../../services/api.js";
 import { addWorkGallery } from "../gallery.js";
+import { submitPost } from "../../config/constants.js";
 
 /**
  * Cette fonction récupère le bloc principale de la modale et 
@@ -54,7 +59,7 @@ export async function generateEditPostWorks(divModalPostWork) {
 
 
     /* on crée un objet regroupant tous les attributs div-titre*/
-    const divTitreAttribute = {}
+    const divTitreAttribute = {};
     /* on appelle la fonction qui va créer l'élément div-titre*/
     listeChildElementPostWork.push(createElement("div", divTitreAttribute));
     /* on appelle la fonction qui va créer les élément du div-titre*/
@@ -70,7 +75,7 @@ export async function generateEditPostWorks(divModalPostWork) {
     listeChildElementDivCategories.forEach(element => listeChildElementPostWork[2].appendChild(element));
 
 
-    /* on rattache l'znsemble des block div au bloc post work*/
+    /* on rattache l'ensemble des block div au bloc post work*/
     listeChildElementPostWork.forEach(element => divModalPostWork.appendChild(element));
 
 }
@@ -89,16 +94,19 @@ export async function validatePostWork() {
     /* on récupère l'input type file et 
     on appelle la fonction qui va vérfier la conformité de la saisie */
     const inputFileElement = document.getElementById(inputFileAttribute.id);
+    removeErrorMessage(inputFileElement);
     erreurs.push(...validateImage(inputFileElement.files[0]));
 
     /* on récupère l'input du titre et
     on appelle la fonction qui va vérfier la conformité de la saisie */
     const inputTitleElement = document.getElementById(inputTitreAttribute.id);
+    removeErrorMessage(inputTitleElement);
     erreurs.push(...validateTitle(inputTitleElement.value));
 
     /* on récupère la liste déroulante et
     on appelle la fonction qui va vérfier la conformité de la saisie */
     const selectElement = document.getElementById(selectCategoriesAttribute.id);
+    removeErrorMessage(selectElement);
     erreurs.push(...await validateCategories(selectElement.value));
 
     if (erreurs.length === 0) {
@@ -113,10 +121,50 @@ export async function validatePostWork() {
         /* on appelle la fonction qui va requêter l'API */
         const reponse = await postWork(work);
         /* Si nous avons une réussite pour la requête alors 
-        nous appellons la fonction qui va ajouter l'oeuvre à la gallery */
-        if (reponse.etat) addWorkGallery(reponse.work);
+        nous appellons la fonction qui va ajouter l'oeuvre à la gallery 
+        et réinitialisons les champs*/
+        if (reponse.etat) {
+            addWorkGallery(reponse.work);
+            resetPostWork(inputFileElement, inputTitleElement, selectElement);
+        }
         console.log(reponse);
     } else {
-        erreurs.forEach(erreur => console.log(erreur));
+        erreurs.forEach((erreur) => {
+            console.log(erreur)
+            const pElement = createElement("p", pInfoTitleErrorAttribute, erreur.message);
+            const fieldElement = document.querySelector(`[name="${erreur.field}"]`);
+            fieldElement.insertAdjacentElement("afterend", pElement);
+        });
     }
 }
+
+/**
+ * Cette fonction vérifie les éléments saisies et modifie l'état du bouton Valider
+ * elle l'active ou le désactive suivant si les champs sont complètement remplis ou non
+ * @param {boolean} initialise :    true si nous sommes sur la création de la page 
+ *                                  afin de ne pas aller chercher les éléments qui 
+ *                                  ne sont pas encore créé
+ */
+export function validateButtonManagement() {
+
+    /* on récupère les champs */
+    const file = document.getElementById(inputFileAttribute.id);
+    const title = document.getElementById(inputTitreAttribute.id);
+    const category = document.getElementById(selectCategoriesAttribute.id);
+
+    /* on vérifie si les champs sont remplis */
+    const fileIsEmpty = file.files.length === 0;
+    const titleIsEmpty = title.value.trim() === "";
+    const categoryIsEmpty = category.value === "";
+
+    /* on récupère le button */
+    const button = document.querySelector(`#modalGestion .${submitPost.class}`);
+    /* Tant que l'un des trois est vide, le boutton reste désactivé */
+    if (fileIsEmpty || titleIsEmpty || categoryIsEmpty) {
+        buttonDisabled(button);
+    } else {
+        buttonActivated(button);
+    }
+
+}
+

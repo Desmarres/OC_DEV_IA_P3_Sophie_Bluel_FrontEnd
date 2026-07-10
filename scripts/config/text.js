@@ -22,19 +22,19 @@ export const labelTitreText = "Titre";
 
 export const labelCategoriesText = "Catégorie";
 
-/* -------------- Texte des erreurs du formulaire de la modal  -------------- */
+/* -------------- Texte erreurs du formulaire de la modal  -------------- */
 
 export const pInfoTitleError = {
     "vide": "Vous devez renseigner un titre",
     "errorRegExp": "Veuillez renseigner un titre valide, sans caractères spéciaux."
-}
+};
 
 export const inputFileError = {
-    "format": "Mauvais format de fichier",
-    "size": "L'image est trop volumineux",
+    "format": `Le format du fichier n'est pas ${extensions.join(", ")}`,
+    "size": `L'image est supérieur à ${imageMaxSize}mo.`,
     "etatNull": "Veuillez ajouter une photo valide."
-}
+};
 
 export const categoriesError = {
     "incorrectData": "Veuillez choisir une catégorie."
-}
+};

@@ -18,7 +18,7 @@ export const logout = {
     class: "js-logout"
 };
 
-/* -------------- Modale suivant la page delete ou post Work  -------------- */
+/* -------------- Class des élément de la Modal  -------------- */
 
 /* Class et texte du bouton ADD ou Submit de la modale */
 export const addWork = {
@@ -28,7 +28,7 @@ export const addWork = {
 
 export const submitPost = {
     texte: "Valider",
-    class: "submit-disabled"
+    class: "submit"
 };
 
 /* Class du modal-main */
@@ -52,7 +52,11 @@ export const modalTitle = {
 export const modalPages = {
     delete: "deleteWork",
     add: "addWork"
-}
+};
+
+export const hiddenClass = "hidden";
+
+export const errorClass = "errorText";
 
 export const imageTypeAllowed = ["image/jpeg", "image/png"];
 export const imageMaxSize = 4; /* En Mo */
@@ -61,5 +65,5 @@ export const ONE_MO = 1024 * 1024;
 export const imageRestriction = {
     "fileType": imageTypeAllowed,
     "size": imageMaxSize
-}
+};
 
