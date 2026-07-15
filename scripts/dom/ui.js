@@ -4,28 +4,31 @@
  * 
  *********************************************************************************/
 
+import { blackBarText } from "../config/text.js";
+import {
+    iEditAttribute,
+    divBlackBarAttribute
+} from "../config/attributs.js";
 
 /**
  * Cette fonction reçoit une balise en paramètre et le texte de la balise.
  * Elle ajoute une balise img avec le logo modifier, ainsi qu'une balise p avec le texte.
- * @param {HTMLElement} HTMLElement : l'élément parent acceuillant le logo modifier et le texte
+ * @param {HTMLElement} element : l'élément parent acceuillant le logo modifier et le texte
  * @param {string} texte : texte à afficher dans le block
  */
-export function createBlockModifier(HTMLElement, texte) {
+export function createBlockModifier(parentElement, texte) {
+
+    /* initilisation de la variable enfant */
+    let listeChildrenElement = [];
 
     // on crée l'image du logo de l'édition
-    let iconeElement = document.createElement("i");
-    iconeElement.classList.add("fa-regular");
-    iconeElement.classList.add("fa-pen-to-square");
-    iconeElement.classList.add("logo-edit");
+    listeChildrenElement.push(createElement("i", iEditAttribute));
 
     // on crée le paragraphe avec le texte
-    let pElement = document.createElement("p");
-    pElement.textContent = texte;
+    listeChildrenElement.push(createElement("p", {}, texte));
 
-    // on assemble le bloc lien
-    HTMLElement.appendChild(iconeElement);
-    HTMLElement.appendChild(pElement);
+    /* on rattache les enfants a l'élément reçu en paramètre */
+    listeChildrenElement.forEach(element => parentElement.appendChild(element));
 }
 
 
@@ -57,11 +60,10 @@ export function addBlackBarEditMode() {
     const body = document.querySelector("body");
 
     // on crée un block qui va acceuillir les éléments modifiés
-    let blackBar = document.createElement("div");
-    blackBar.classList.add("black-bar");
+    const blackBar = createElement("div", divBlackBarAttribute);
 
     //on appelle la fonction qui va créer les éléments HTML interne à la balise
-    createBlockModifier(blackBar, "Mode édition");
+    createBlockModifier(blackBar, blackBarText);
 
     // on ajoute le bloc avant le header
     body.insertAdjacentElement("afterbegin", blackBar);

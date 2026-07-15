@@ -19,7 +19,8 @@ import {
 } from "../../config/constants.js";
 import {
     previousButton,
-    closeButton
+    closeButton,
+    aOpenEditModal
 } from "../../config/attributs.js";
 import { generateEditGallery } from "./modalGallery.js";
 import { generateEditPostWorks } from "./form.js";
@@ -39,21 +40,19 @@ import {
  */
 export function generateEditElement() {
 
-    // récupéraration de l'élément titre  qui précéde le bloc d'édition
+    /* récupéraration de l'élément titre  qui précéde le bloc d'édition */
     const titreElement = document.querySelector("#portfolio h2");
 
-    // on crée le lien vers l'ancre du bloc modal
-    let lienElement = document.createElement("a");
-    lienElement.classList.add("edit");
-    lienElement.href = "#modalGestion";
+    /* on crée le lien vers l'ancre du bloc modal */
+    const lienElement = createElement("a", aOpenEditModal);
 
-    //on appelle la fonction qui va créer les éléments HTML interne à la balise crée
+    /* on appelle la fonction qui va créer les éléments HTML interne à la balise crée */
     createBlockModifier(lienElement, "modifier");
 
-    // on ajoute le bloc après le titre
+    /* on ajoute le bloc après le titre */
     titreElement.insertAdjacentElement("afterend", lienElement);
 
-    // on appelle la fonction qui gère l'ouverture de la modal
+    /* on appelle la fonction qui gère l'ouverture de la modal */
     lienElement.addEventListener("click", (event) => modalOpeningManagement(event, lienElement));
 
     /* on ajoute un écouteur sur le bouton de la modale puis on appelle la fonction de gestion du bouton*/

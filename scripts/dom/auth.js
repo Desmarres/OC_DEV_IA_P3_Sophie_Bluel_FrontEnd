@@ -51,8 +51,8 @@ export function logManagement(currentPage) {
     // si nous avons un token, nous sommes connecté
     if (token !== null) {
         console.log("Connected");
-        // si nous sommes sur l'index, nous appelons 
-        // la fonction qui génère le liens vers l'édition
+        /* si nous sommes sur l'index, nous appelons 
+        la fonction qui génère le liens vers l'édition */
         if (currentPage === "index.html") generateEditElement();
         // on appelle la fonction qui ajoute la bar mode Edition en haut de la page
         addBlackBarEditMode()
@@ -67,8 +67,8 @@ export function logManagement(currentPage) {
         if (lienLog.classList.contains(login.class)) {
             redirectPage(currentPage, "login.html");
         } else {
-            // sinon si nous sommes sur la page index.html, nous supprimons le liens 
-            // vers l'édition
+            /* sinon si nous sommes sur la page index.html, nous supprimons le liens 
+            vers l'édition */
             if (currentPage === "index.html") removeEditElement();
             // on appelle la fonction qui retire la bar mode Edition en haut de la page
             removeBlackBarEditMode()

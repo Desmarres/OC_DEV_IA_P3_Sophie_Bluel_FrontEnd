@@ -126,11 +126,9 @@ export async function validatePostWork() {
         if (reponse.etat) {
             addWorkGallery(reponse.work);
             resetPostWork(inputFileElement, inputTitleElement, selectElement);
-        }
-        console.log(reponse);
+        };
     } else {
         erreurs.forEach((erreur) => {
-            console.log(erreur)
             const pElement = createElement("p", pInfoTitleErrorAttribute, erreur.message);
             const fieldElement = document.querySelector(`[name="${erreur.field}"]`);
             fieldElement.insertAdjacentElement("afterend", pElement);

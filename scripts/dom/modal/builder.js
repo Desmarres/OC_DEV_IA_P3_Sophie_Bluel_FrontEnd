@@ -16,7 +16,8 @@ import {
     inputTitreAttribute,
     labelCategoriesAttribute,
     selectCategoriesAttribute,
-    deleteButton
+    deleteButton,
+    optionCategorieAttribute
 } from "../../config/attributs.js";
 import {
     labelFileText,
@@ -27,7 +28,10 @@ import {
 import { addPhotoManagement } from "./events.js";
 import { deleteWorkManagement } from "./modalGallery.js";
 import { validateButtonManagement } from "./form.js";
-import { errorClass } from "../../config/constants.js";
+import {
+    errorClass,
+    disabledClass
+} from "../../config/constants.js";
 
 /**
  * Cette fonction reçoit une ouevre en entrée et 
@@ -53,7 +57,7 @@ export function createWorkEditMode(work) {
     /* attribution d'un data-id pour identifier l'oeuvre */
     figureElement.dataset.id = work.id;
 
-    // initilisation de la variable enfant
+    /* initilisation de la variable enfant */
     let listeFigureElement = [];
     let listeButtonElement = [];
 
@@ -221,13 +225,6 @@ export async function createBlocSelect() {
     // initilisation de la variable
     let listeChildElementSelect = [];
 
-    /* on crée un objet regroupant tous les attributs de la première option 
-    par défaut et non sélectionnable*/
-    let optionCategorieAttribute = {
-        "value": "",
-        "selected": "",
-        "disabled": ""
-    }
     /* on appelle la fonction qui va créer l'élément option*/
     listeChildElementSelect.push(createElement("option", optionCategorieAttribute));
 
@@ -257,7 +254,7 @@ export async function createBlocSelect() {
  */
 export function buttonDisabled(button) {
     button.disabled = true;
-    button.classList.add("disabled");
+    button.classList.add(disabledClass);
 }
 
 /**
@@ -266,7 +263,7 @@ export function buttonDisabled(button) {
  */
 export function buttonActivated(button) {
     button.disabled = false;
-    button.classList.remove("disabled");
+    button.classList.remove(disabledClass);
 }
 
 /**

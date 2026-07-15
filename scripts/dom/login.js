@@ -34,9 +34,9 @@ export function loginForm() {
  */
 function emailInputControl(inputEmail) {
 
-    // On écoute quand le visiteur sort du champ de saisie et on vérifie que l'email est valide
-    //  Si oui, on enlève la classe error
-    //  Si non, on ajoute la classe error
+    /* On écoute quand le visiteur sort du champ de saisie et on vérifie que l'email est valide
+    Si oui, on enlève la classe error
+    Si non, on ajoute la classe error */
     inputEmail.addEventListener("focusout", () =>
         validateEmail(inputEmail.value)
             ? inputEmail.classList.remove("error")
@@ -49,9 +49,9 @@ function emailInputControl(inputEmail) {
  */
 function passwordInputControl(inputPassword) {
 
-    // On écoute quand le visiteur sort du champ de saisie et on vérifie que l'email est valide
-    //  Si oui, on enlève la classe error
-    //  Si non, on ajoute la classe error
+    /* On écoute quand le visiteur sort du champ de saisie et on vérifie que l'email est valide
+    Si oui, on enlève la classe error
+    Si non, on ajoute la classe error */
     inputPassword.addEventListener("focusout", () =>
         validatePassword(inputPassword.value)
             ? inputPassword.classList.remove("error")

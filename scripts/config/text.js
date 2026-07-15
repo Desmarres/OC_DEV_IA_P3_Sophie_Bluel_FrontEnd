@@ -8,6 +8,12 @@ import { imageMaxSize, imageTypeAllowed } from "../config/constants.js";
 
 /* -------------- Texte des éléments du formulaire de la modal  -------------- */
 
+export const buttonFilterTousText = "Tous";
+
+export const blackBarText = "Mode édition";
+
+/* -------------- Texte des éléments du formulaire de la modal  -------------- */
+
 /* on crée un tableau avec uniquement les extensions authorizées */
 const extensions = imageTypeAllowed
     .map(type => type.split("/")[1].replace("jpeg", "jpg"));

@@ -4,6 +4,13 @@
  * 
  *********************************************************************************/
 
+/* -------------- Générique  -------------- */
+
+export const hiddenClass = "hidden";
+
+export const errorClass = "errorText";
+
+export const disabledClass = "disabled";
 
 /* -------------- Header  -------------- */
 
@@ -17,6 +24,10 @@ export const logout = {
     texte: "logout",
     class: "js-logout"
 };
+
+/* -------------- Filtre  -------------- */
+
+export const filterSelectedClass = "filter-button-selected";
 
 /* -------------- Class des élément de la Modal  -------------- */
 
@@ -53,10 +64,6 @@ export const modalPages = {
     delete: "deleteWork",
     add: "addWork"
 };
-
-export const hiddenClass = "hidden";
-
-export const errorClass = "errorText";
 
 export const imageTypeAllowed = ["image/jpeg", "image/png"];
 export const imageMaxSize = 4; /* En Mo */

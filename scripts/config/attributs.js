@@ -27,6 +27,33 @@ export const closeButton = {
     ariaLabel: "Close page"
 };
 
+export const iEditAttribute = {
+    "class": "fa-regular fa-pen-to-square logo-edit"
+}
+
+
+/* -------------- Attributs des éléments de la gallerie -------------- */
+
+export const divFilterAttribute = {
+    "class": "filter"
+}
+
+export let buttonFilterAttribute = {
+    "type": "button",
+    "class": "filter-button",
+    "data-id": "all"
+}
+
+export const divBlackBarAttribute = {
+    "class": "black-bar"
+}
+
+/* -------------- Attributs des éléments de la modal -------------- */
+
+export const aOpenEditModal = {
+    "class": "edit",
+    "href": "#modalGestion"
+}
 
 /* -------------- Attributs des éléments du formulaire de la modal -------------- */
 
@@ -88,6 +115,12 @@ export const selectCategoriesAttribute = {
     "id": "categoriesFormModal",
     "required": "",
     "class": "form-element"
+};
+
+export const optionCategorieAttribute = {
+    "value": "",
+    "selected": "",
+    "disabled": ""
 };
 
 /* Partie Erreurs */
