@@ -5,7 +5,6 @@
  *********************************************************************************/
 
 import { getWorks, getCategories } from "./api.js";
-import { generateMainGallery } from "../dom/gallery.js";
 import {
     pInfoTitleError,
     inputFileError,
@@ -15,7 +14,11 @@ import {
     imageRestriction,
     ONE_MO
 } from "../config/constants.js";
-import { inputFileAttribute, inputTitreAttribute, selectCategoriesAttribute } from "../config/attributs.js";
+import {
+    inputFileAttribute,
+    inputTitreAttribute,
+    selectCategoriesAttribute
+} from "../config/attributs.js";
 /**
  * 
  * @param {object} works : [{
@@ -50,19 +53,19 @@ export function recoveryFilterCategoryElements(works) {
  */
 export async function filterGallery(categoryId) {
 
-    // récupération de toutes les oeuvres de l'artiste
+    /* récupération de toutes les oeuvres de l'artiste */
     const works = await getWorks();
 
-    // Initialisation de la variaable des oeuvres filtrées
+    /* Initialisation de la variable des oeuvres filtrées */
     let worksFilter = works;
 
-    // Si on applique un filtre
+    /* Si on applique un filtre */
     if (categoryId !== "all") {
-        // on récupère les oeuvres dont l'id de la catégorie correspond à celle en paramètre
+        /* on récupère les oeuvres dont l'id de la catégorie correspond à celle en paramètre */
         worksFilter = works.filter(work => work.categoryId === parseInt(categoryId));
     }
 
-    generateMainGallery(worksFilter);
+    return worksFilter;
 
 }
 

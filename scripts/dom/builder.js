@@ -5,8 +5,8 @@
  * 
  *********************************************************************************/
 
-import { createElement } from "../ui.js";
-import { getCategories } from "../../services/api.js";
+import { createElement } from "./ui.js";
+import { getCategories } from "../services/api.js";
 import {
     imageAddPhotoAttribute,
     inputFileAttribute,
@@ -18,17 +18,13 @@ import {
     selectCategoriesAttribute,
     deleteButton,
     optionCategorieAttribute
-} from "../../config/attributs.js";
+} from "../config/attributs.js";
 import {
     labelFileText,
     pInfoPhotoText,
     labelTitreText,
     labelCategoriesText
-} from "../../config/text.js";
-import {
-    errorClass,
-    disabledClass
-} from "../../config/constants.js";
+} from "../config/text.js";
 
 /**
  * Cette fonction reçoit une ouevre en entrée et 
@@ -76,6 +72,40 @@ export function createWorkEditMode(work) {
 
     /* on rattache les enfants au block figureElement */
     listeFigureElement.forEach(element => figureElement.appendChild(element));
+
+    return figureElement;
+}
+
+/**
+ * Cette fonction reçoit une oeuvre en paramètre et 
+ * renvoie un élément figure avec l'image de l'oeuvre
+ * @param {object} work : {
+                        "id": number,
+                        "title": string,
+                        "imageUrl": string,
+                        "categoryId": number,
+                        "userId": number,
+                        "category": object  {
+                                            "id": number,
+                                            "name": string
+                                            }
+                        }
+ * @returns {HTMLElement} type figure
+ */
+export function createWorkGallery(work) {
+
+    /* création des balises figure, image et figcaption */
+    let figureElement = document.createElement("figure");
+    /* attribution d'un data-id pour identifier l'oeuvre */
+    figureElement.dataset.id = work.id;
+
+    /* création de l'image de l'oeuvre */
+    let imageElement = document.createElement("img");
+    imageElement.src = work.imageUrl;
+    imageElement.alt = work.title;
+
+    /* on rattache l'image et le figcaption à la figure */
+    figureElement.appendChild(imageElement);
 
     return figureElement;
 }
@@ -208,44 +238,4 @@ export async function createBlocSelect() {
 
 
     return listeChildElementSelect
-}
-
-/**
- * Cette fonction désactive le bouton et ajoute la class pour le griser
- * @param {HTMLElement} button 
- */
-export function buttonDisabled(button) {
-    button.disabled = true;
-    button.classList.add(disabledClass);
-}
-
-/**
- * Cette fonction active le bouton et enlève la class qui le grisait
- * @param {HTMLElement} button 
- */
-export function buttonActivated(button) {
-    button.disabled = false;
-    button.classList.remove(disabledClass);
-}
-
-/**
- * Cette fonction reçoit un element en paramètre et 
- * récupère les éléments frères qui suivent. 
- * Il vérifie et supprime tous les éléments qui sont des messages d'erreur
- * @param {HTMLElement} element 
- */
-export function removeErrorMessage(element) {
-
-    /* on récupère les éléments frères qui suivent */
-    let listeElement = [];
-    let nextElement = element.nextElementSibling;
-    while (nextElement !== null) {
-        listeElement.push(nextElement);
-        nextElement = nextElement.nextElementSibling;
-    }
-
-    listeElement.forEach((element) => {
-        if (element.classList.contains(errorClass)) element.remove();
-    })
-
 }

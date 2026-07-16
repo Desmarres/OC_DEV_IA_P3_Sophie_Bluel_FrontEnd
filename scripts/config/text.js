@@ -6,6 +6,18 @@
 
 import { imageMaxSize, imageTypeAllowed } from "../config/constants.js";
 
+/* -------------- Texte des éléments de la console  -------------- */
+
+export const addAPIWork = {
+    "successfull": "L'oeuvre a été ajoutée à la gallerie.",
+    "failed": "Un problème est survenu et l'oeuvre n'a pas pu être ajoutée."
+};
+
+export const deleteAPIWork = {
+    "successfull": "L'oeuvre a été supprimée de la gallerie.",
+    "failed": "Un problème est survenu et l'oeuvre n'a pas pu être supprimée."
+};
+
 /* -------------- Texte des éléments du formulaire de la modal  -------------- */
 
 export const buttonFilterTousText = "Tous";

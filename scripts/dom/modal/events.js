@@ -1,7 +1,6 @@
 /*********************************************************************************
  * 
- * Ce fichier contient toutes les fonctions 
- * gère les évênements. 
+ * Ce fichier contient toutes les fonctions qui gère les évênements de la modal.
  * 
  *********************************************************************************/
 
@@ -12,7 +11,9 @@ import {
 import { validatePostWork } from "./form.js";
 import {
     modalPages,
-    hiddenClass
+    hiddenClass,
+    errorClass,
+    disabledClass
 } from "../../config/constants.js";
 import {
     imageAddPhotoAttribute,
@@ -111,4 +112,44 @@ export function addPhotoManagement(photo) {
             }
         }
     }
+}
+
+/**
+ * Cette fonction désactive le bouton et ajoute la class pour le griser
+ * @param {HTMLElement} button 
+ */
+export function buttonDisabled(button) {
+    button.disabled = true;
+    button.classList.add(disabledClass);
+}
+
+/**
+ * Cette fonction active le bouton et enlève la class qui le grisait
+ * @param {HTMLElement} button 
+ */
+export function buttonActivated(button) {
+    button.disabled = false;
+    button.classList.remove(disabledClass);
+}
+
+/**
+ * Cette fonction reçoit un element en paramètre et 
+ * récupère les éléments frères qui suivent. 
+ * Il vérifie et supprime tous les éléments qui sont des messages d'erreur
+ * @param {HTMLElement} element 
+ */
+export function removeErrorMessage(element) {
+
+    /* on récupère les éléments frères qui suivent */
+    let listeElement = [];
+    let nextElement = element.nextElementSibling;
+    while (nextElement !== null) {
+        listeElement.push(nextElement);
+        nextElement = nextElement.nextElementSibling;
+    }
+
+    listeElement.forEach((element) => {
+        if (element.classList.contains(errorClass)) element.remove();
+    })
+
 }

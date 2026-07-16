@@ -22,17 +22,15 @@ import {
     closeButton,
     aOpenEditModal
 } from "../../config/attributs.js";
-import { generateEditGallery } from "./modalGallery.js";
+import { initDeleteGallery } from "../gallery.js";
 import { generateEditPostWorks } from "./form.js";
-import {
-    createIconeBouton,
-    buttonActivated,
-    buttonDisabled
-} from "./builder.js";
+import { createIconeBouton } from "../builder.js";
 import {
     buttonModalManagementEventListener,
     closeModalEventListener,
-    previousModalPageEventListener
+    previousModalPageEventListener,
+    buttonDisabled,
+    buttonActivated
 } from "./events.js";
 
 /**
@@ -102,7 +100,7 @@ function modalOpeningManagement(event, lienElement) {
     /* Récupération de l'élément du DOM qui accueillera les oeuvres */
     const modalDivMain = document.querySelector("#modalGestion .modal-main");
     /* on appelle la fonction qui génère la gallerie */
-    generateEditGallery(modalDivMain);
+    initDeleteGallery(modalDivMain);
 }
 
 /**
@@ -157,7 +155,7 @@ export function changeModalPage(modalElement, nameModalPage) {
         const buttonArrow = modalElement.querySelector(".logo-previous-page");
         if (buttonArrow !== null) buttonArrow.remove();
 
-        generateEditGallery(modalDivMain);
+        initDeleteGallery(modalDivMain);
     }
 }
 

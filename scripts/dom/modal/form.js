@@ -9,12 +9,14 @@ import { createElement } from "../ui.js";
 import {
     createBlocAddPhoto,
     createBlocDivTitre,
-    createBlocDivCategories,
-    buttonActivated,
+    createBlocDivCategories
+} from "../builder.js";
+import {
+    addPhotoManagement,
     buttonDisabled,
+    buttonActivated,
     removeErrorMessage
-} from "./builder.js";
-import { addPhotoManagement } from "./events.js";
+} from "./events.js";
 import {
     divPhotoAttribute,
     divCategoriesAttribute,
@@ -26,8 +28,7 @@ import {
 } from "../../config/attributs.js";
 import {
     pInfoTitleError,
-    inputFileError,
-    categoriesError
+    addAPIWork
 } from "../../config/text.js";
 import {
     validateTitle,
@@ -79,7 +80,7 @@ export async function generateEditPostWorks(divModalPostWork) {
     listeChildElementPostWork.forEach(element => divModalPostWork.appendChild(element));
 
     /* on appelle la fonction qui va ajouter les écouteurs sur les champs */
-    editPostWorksEventListener();
+    editPostWorksManagement();
 }
 
 /**
@@ -126,8 +127,11 @@ export async function validatePostWork() {
         nous appellons la fonction qui va ajouter l'oeuvre à la gallery 
         et réinitialisons les champs*/
         if (reponse.etat) {
+            console.log(addAPIWork.successfull);
             addWorkGallery(reponse.work);
             resetPostWork(inputFileElement, inputTitleElement, selectElement);
+        } else {
+            console.log(addAPIWork.failed);
         };
     } else {
         erreurs.forEach((erreur) => {
@@ -168,7 +172,11 @@ export function validateButtonManagement() {
 
 }
 
-function editPostWorksEventListener() {
+/**
+ * Cette fonction écoute les champs du formulaire et 
+ * appelle les fonctions de gestions de ces champs 
+ */
+function editPostWorksManagement() {
 
     /* on récupère l'élément image */
     const imageElement = document.getElementById(imageAddPhotoAttribute.id);

@@ -21,11 +21,14 @@ export function createBlockModifier(parentElement, texte) {
     /* initilisation de la variable enfant */
     let listeChildrenElement = [];
 
-    // on crée l'image du logo de l'édition
+    /* on crée l'image du logo de l'édition */
     listeChildrenElement.push(createElement("i", iEditAttribute));
 
-    // on crée le paragraphe avec le texte
-    listeChildrenElement.push(createElement("p", {}, texte));
+    /* on initialise les attributs du paragraphe */
+    const pEditAttribute = {};
+
+    /* on crée le paragraphe avec le texte */
+    listeChildrenElement.push(createElement("p", pEditAttribute, texte));
 
     /* on rattache les enfants a l'élément reçu en paramètre */
     listeChildrenElement.forEach(element => parentElement.appendChild(element));

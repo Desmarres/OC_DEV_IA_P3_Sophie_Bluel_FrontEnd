@@ -5,84 +5,147 @@
  *********************************************************************************/
 
 import { filterGallery } from "../services/data.js";
-import { createElement } from "./ui.js";
-import { divFilterAttribute, buttonFilterDefaultAttribute } from "../config/attributs.js";
+import {
+    createElement,
+    removeElementBydataId
+} from "./ui.js";
+import {
+    getWorks,
+    deleteWork
+} from "../services/api.js";
+import {
+    divFilterAttribute,
+    buttonFilterDefaultAttribute,
+    deleteButton
+} from "../config/attributs.js";
 import { hiddenClass, filterSelectedClass } from "../config/constants.js";
-import { buttonFilterTousText } from "../config/text.js";
-
+import {
+    buttonFilterTousText,
+    deleteAPIWork
+} from "../config/text.js";
+import {
+    createIconeBouton,
+    createWorkGallery
+} from "./builder.js";
 
 /**
- * Cette fonction récupère en pramètre un tableau d'oeuvre
- * Elle vide le bloc div "gallery" pour afficher les éléments reçus en paramètre
- * @param {object} works : [{  
-                            "id": number,
-                            "title": string,
-                            "imageUrl": string,
-                            "categoryId": number,
-                            "userId": number,
-                            "category": object  {
-                                                "id": number,
-                                                "name": string
-                                                }
-                            }]
+ * Cette fonction initialise la gallerie principale du site
+ * Elle reçoit une liste d'oeuvres et génère l'affichage
+ * @param {object[]} works : [{
+                        "id": number,
+                        "title": string,
+                        "imageUrl": string,
+                        "categoryId": number,
+                        "userId": number,
+                        "category": object  {
+                                            "id": number,
+                                            "name": string
+                                            }
+                        }]
  */
-export function generateMainGallery(works) {
-
+export function initMainGallery(works) {
     /* Récupération de l'élément du DOM qui accueillera les oeuvres */
     const divGallery = document.querySelector("#portfolio .gallery");
-    /* Initialisation de la div */
-    divGallery.innerHTML = "";
 
-    /* pour chaque élément de la liste, on va créer une fiche de l'oeuvre */
-    works.forEach(work => {
+    /* on réinitialise la galerie */
+    const listeFigures = generateGallery(works, divGallery);
 
-        /* on appelle la fonction qui va créer l'élément figure avec l'oeuvre */
-        const figureElement = createWorkGallery(work);
-
-        /* on rattache la figure à la div gallery */
-        divGallery.appendChild(figureElement);
-    })
+    /* pour chaque élément de la liste, on va créer la légende */
+    listeFigures.forEach(figure => addFigcaption(figure));
 }
 
 /**
- * Cette fonction reçoit une oeuvre en entrée et 
- * retourne l'élément figure correspondant à l'oeuvre
- * @param {object} work :{  
-                            "id": number,
-                            "title": string,
-                            "imageUrl": string,
-                            "categoryId": number,
-                            "userId": number,
-                            "category": object  {
-                                                "id": number,
-                                                "name": string
-                                                }
-                            }
- * @returns {HTMLElement} : l'élément DOM figure correspondant à l'oeuvre reçu en entrée
+ * Cette fonction initialise la gallerie de la modal
+ * Elle reçoit l'élément modal et génère l'affichage des oeuvres
+ * @param {HTMLElement} divModalGallery 
  */
-function createWorkGallery(work) {
+export async function initDeleteGallery(divModalGallery) {
 
-    /* création des balises figure, image et figcaption */
-    let figureElement = document.createElement("figure");
-    /* attribution d'un data-id pour identifier l'oeuvre */
-    figureElement.dataset.id = work.id;
+    /* on récupére toutes les oeuvres de l'artiste */
+    const works = await getWorks();
 
-    /* création de l'image de l'oeuvre */
-    let imageElement = document.createElement("img");
-    imageElement.src = work.imageUrl;
-    imageElement.alt = work.title;
+    /* on réinitialise la galerie */
+    const listeFigures = generateGallery(works, divModalGallery);
 
-    /* création de lélément titre de l'oeuvre */
-    let figCaptionElement = document.createElement("figcaption");
-    figCaptionElement.textContent = work.title;
-
-    /* on rattache l'image et le figcaption à la figure */
-    figureElement.appendChild(imageElement);
-    figureElement.appendChild(figCaptionElement);
-
-    return figureElement;
+    /* pour chaque élément de la liste, on va créer le bouton de suppression */
+    listeFigures.forEach(figure => {
+        const button = addDeleteButton(figure);
+        /* on écoute le click pour appeller la fonction de gestion de la suppression d'une oeuvre */
+        button.addEventListener("click", (event) => {
+            const workId = event.target.closest("figure").getAttribute("data-id");
+            deleteWorkManagement(workId);
+        });
+    });
 }
 
+/**
+ * Cette fonction génère une galerie en créant des élément de type figure 
+ * avec les oeuvres reçus en paramètre.
+ * Elle ajoute les éléments créés comme enfant de l'élément block donné en paramètre
+ * @param {object[]} works  : [{
+                        "id": number,
+                        "title": string,
+                        "imageUrl": string,
+                        "categoryId": number,
+                        "userId": number,
+                        "category": object  {
+                                            "id": number,
+                                            "name": string
+                                            }
+                        }]
+ * @param {HTMLElement} blockElement 
+ * @returns 
+ */
+export function generateGallery(works, blockElement) {
+
+    /* Initialisation de le block */
+    blockElement.innerHTML = "";
+
+    /* Initialisation du tableau des éléments figures */
+    let listeFigures = [];
+
+    /* pour chaque élément de la liste, on va créer une fiche de l'oeuvre */
+    works.forEach(work => listeFigures.push(createWorkGallery(work)));
+
+    listeFigures.forEach(figure => blockElement.appendChild(figure));
+
+    return listeFigures;
+}
+
+/**
+ * Cette fonction ajoute un élément Bouton à l'élément figure fournis en paramètre
+ * Elle rétourne l'élement créé.
+ * @param {HTMLElement} figure 
+ * @returns {HTMLElement} type button
+ */
+function addDeleteButton(figure) {
+
+    /* on appelle la fonction qui va créer le bouton délete avec l'icone*/
+    const button = createIconeBouton(deleteButton.classBouton, deleteButton.classIcone, deleteButton.ariaLabel);
+
+    /* on rattache le bouton à l'élément figure */
+    figure.appendChild(button);
+
+    return button;
+}
+
+/**
+ * Cette fonction ajoute un élément FigCaption à l'élément figure fournis en paramètre
+ * Elle récupère l'attribut ALT de l'image pour en faire la légende
+ * @param {HTMLElement} figure 
+ */
+export function addFigcaption(figure) {
+
+    /* on initialise les attribut du figcaption */
+    const figCaptionAttribut = {};
+
+    /* création récupère l'argument alt de la photo pour l'écrire dans la légende */
+    const figCaptionText = figure.querySelector("img").alt;
+
+    /* on crée et on rattache le figcaption à la figure */
+    figure.appendChild(createElement("figcaption", figCaptionAttribut, figCaptionText));
+
+}
 
 /**
  * Cette fonction récupère en pramètre la liste des catégories des oeuvres de la gallery 
@@ -152,9 +215,10 @@ export function filterButtonEventListener() {
 
     /* Ajout des event listener */
     for (let i = 0; i < listeButtonElement.length; i++) {
-        listeButtonElement[i].addEventListener("click", (event) => {
+        listeButtonElement[i].addEventListener("click", async (event) => {
             const dataSetId = event.target.dataset.id;
-            filterGallery(dataSetId);
+            const worksFilter = await filterGallery(dataSetId);
+            initMainGallery(worksFilter);
             changeButtonSelected(listeButtonElement, dataSetId)
         })
     }
@@ -203,7 +267,6 @@ function changeButtonSelected(listeButtonElement, dataSetId) {
 export function addWorkGallery(work) {
 
     /* on récupère l'id du filtre sélectionné de la page */
-
     let buttonFilterSelected = document.querySelector("#portfolio .filter-button-selected");
     let idFiltre = buttonFilterSelected.dataset.id;
 
@@ -212,6 +275,8 @@ export function addWorkGallery(work) {
     if ((idFiltre === "all") || (work.categoryId === idFiltre)) {
         /* créeation du nouvel élément HTML */
         const figureElement = createWorkGallery(work);
+        /* ajout de la légende */
+        addFigcaption(figureElement);
 
         /* Récupération de l'élément du DOM qui accueillera les oeuvres */
         const divGallery = document.querySelector("#portfolio .gallery");
@@ -221,3 +286,23 @@ export function addWorkGallery(work) {
     }
 }
 
+/**
+ * Cette fonction reçoit l'id d'une oeuvre à supprimer.
+ * Elle appelle la fonction qui va requêter l'API
+ * En cas de succès, elle appelle la fonction qui va supprimer 
+ * l'ensemble des oeuvres correspondant à cette id du site
+ * @param {number} id : id de l'oeuvre à supprimer
+ */
+async function deleteWorkManagement(id) {
+
+    // on appelle la fonction qui va requeter l'API pour supprimer 
+    // l'élement correspondant à l'id reçu en entrée
+    const reponse = await deleteWork(id);
+    // si la requête est un succès
+    if (reponse.etat) {
+        console.log(deleteAPIWork.successfull);
+        removeElementBydataId("figure", id);
+    } else {
+        console.log(deleteAPIWork.failed);
+    }
+}
