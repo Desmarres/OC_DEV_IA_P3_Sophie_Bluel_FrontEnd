@@ -5,7 +5,7 @@
  *********************************************************************************/
 
 import { getWorks, getCategories } from "./api.js";
-import { generateGallery } from "../dom/gallery.js";
+import { generateMainGallery } from "../dom/gallery.js";
 import {
     pInfoTitleError,
     inputFileError,
@@ -62,7 +62,7 @@ export async function filterGallery(categoryId) {
         worksFilter = works.filter(work => work.categoryId === parseInt(categoryId));
     }
 
-    generateGallery(worksFilter);
+    generateMainGallery(worksFilter);
 
 }
 

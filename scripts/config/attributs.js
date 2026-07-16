@@ -38,7 +38,7 @@ export const divFilterAttribute = {
     "class": "filter"
 }
 
-export let buttonFilterAttribute = {
+export const buttonFilterDefaultAttribute = {
     "type": "button",
     "class": "filter-button",
     "data-id": "all"
@@ -65,6 +65,7 @@ export const divPhotoAttribute = {
 export const imageAddPhotoAttribute = {
     "src": "./assets/icons/picture-svgrepo-com.svg",
     "alt": "icone d'image",
+    "id": "imageFormModal",
     "class": "js-imgAddPhoto"
 };
 

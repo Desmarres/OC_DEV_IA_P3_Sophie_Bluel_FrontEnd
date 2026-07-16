@@ -16,7 +16,6 @@ import {
 } from "../../config/constants.js";
 import {
     imageAddPhotoAttribute,
-    inputFileAttribute,
     newImageClass
 } from "../../config/attributs.js";
 
@@ -54,17 +53,20 @@ export function previousModalPageEventListener(element) {
  * Cette fonction reçoit l'évênement du click sur le bouton de la modal
  * et dirige vers la page Add Work si nous étions sur delete Work
  * ou vérifie les éléments du formulaire si nous étions sur Add Work
- * @param {Event} event 
+ * @param {HTMLElement} buttonAddWork 
  */
-export function buttonModalManagement(event) {
-    // annulation du comportement par défaut
-    event.preventDefault();
-    const modal = event.target.parentElement.parentElement;
-    if (event.target.classList.contains("js-addWork")) {
-        changeModalPage(modal, modalPages.add);
-    } else {
-        validatePostWork();
-    }
+export function buttonModalManagementEventListener(buttonAddWork) {
+
+    buttonAddWork.addEventListener("click", (event) => {
+        // annulation du comportement par défaut
+        event.preventDefault();
+        const modal = event.target.parentElement.parentElement;
+        if (event.target.classList.contains("js-addWork")) {
+            changeModalPage(modal, modalPages.add);
+        } else {
+            validatePostWork();
+        }
+    });
 }
 
 /**

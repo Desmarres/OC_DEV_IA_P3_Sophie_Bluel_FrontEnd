@@ -12,16 +12,17 @@ import {
     createBlocDivCategories,
     buttonActivated,
     buttonDisabled,
-    resetPostWork,
     removeErrorMessage
 } from "./builder.js";
+import { addPhotoManagement } from "./events.js";
 import {
     divPhotoAttribute,
     divCategoriesAttribute,
     pInfoTitleErrorAttribute,
     inputFileAttribute,
     inputTitreAttribute,
-    selectCategoriesAttribute
+    selectCategoriesAttribute,
+    imageAddPhotoAttribute
 } from "../../config/attributs.js";
 import {
     pInfoTitleError,
@@ -74,10 +75,11 @@ export async function generateEditPostWorks(divModalPostWork) {
     /* on rattache les enfants au block div catégorie : 3ème enfant de postWork*/
     listeChildElementDivCategories.forEach(element => listeChildElementPostWork[2].appendChild(element));
 
-
     /* on rattache l'ensemble des block div au bloc post work*/
     listeChildElementPostWork.forEach(element => divModalPostWork.appendChild(element));
 
+    /* on appelle la fonction qui va ajouter les écouteurs sur les champs */
+    editPostWorksEventListener();
 }
 
 /**
@@ -165,4 +167,56 @@ export function validateButtonManagement() {
     }
 
 }
+
+function editPostWorksEventListener() {
+
+    /* on récupère l'élément image */
+    const imageElement = document.getElementById(imageAddPhotoAttribute.id);
+    imageElement.addEventListener("click", () => {
+        document.getElementById(inputFileAttribute.id).click();
+    });
+
+    /* on récupère l'élément input type file */
+    const inputElement = document.getElementById(inputFileAttribute.id);
+    inputElement.addEventListener("change", () => {
+        addPhotoManagement(inputElement.files[0]);
+        validateButtonManagement();
+        removeErrorMessage(inputElement);
+    });
+
+    /* on récupère l'élément input titre */
+    const inputTitreElement = document.getElementById(inputTitreAttribute.id);
+    inputTitreElement.addEventListener("focus", () => {
+        validateButtonManagement();
+        removeErrorMessage(inputTitreElement);
+    });
+
+    /* on récupère l'élément select categories */
+    const selectCategoriesElement = document.getElementById(selectCategoriesAttribute.id);
+    selectCategoriesElement.addEventListener("change", () => {
+        validateButtonManagement();
+        removeErrorMessage(selectCategoriesElement);
+    });
+}
+
+/**
+ * Cette fonction réinitialise les champs passés en paramètre
+ * @param {HTMLElement} inputFile 
+ * @param {HTMLElement} inputText 
+ * @param {HTMLElement} select 
+ */
+function resetPostWork(inputFile, inputText, select) {
+
+    /* on réinitialise les champs */
+    inputFile.value = "";
+    inputText.value = "";
+    select.selectedIndex = 0;
+
+    /* on rappelle la fonction qui gère le bouton 
+    puis celle qui gère l'affichage de l'image */
+    validateButtonManagement();
+    addPhotoManagement(inputFile.files[0]);
+
+}
+
 

@@ -1,5 +1,5 @@
 import { getWorks, getCategories } from "../services/api.js";
-import { generateGallery, generateFilterCategory, filterButtonEventListener } from "../dom/gallery.js";
+import { generateMainGallery, generateFilterCategory, filterButtonEventListener } from "../dom/gallery.js";
 import { recoveryFilterCategoryElements } from "../services/data.js";
 import { logManagement } from "../dom/auth.js"
 
@@ -9,7 +9,7 @@ import { logManagement } from "../dom/auth.js"
 const works = await getWorks();
 
 // on réinitialise la galerie
-generateGallery(works);
+generateMainGallery(works);
 
 /* ------------ GESTION DES FILTRES DE LA GALLERIE ------------ */
 

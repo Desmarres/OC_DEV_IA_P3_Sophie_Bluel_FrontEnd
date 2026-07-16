@@ -30,7 +30,7 @@ import {
     buttonDisabled
 } from "./builder.js";
 import {
-    buttonModalManagement,
+    buttonModalManagementEventListener,
     closeModalEventListener,
     previousModalPageEventListener
 } from "./events.js";
@@ -55,9 +55,9 @@ export function generateEditElement() {
     /* on appelle la fonction qui gère l'ouverture de la modal */
     lienElement.addEventListener("click", (event) => modalOpeningManagement(event, lienElement));
 
-    /* on ajoute un écouteur sur le bouton de la modale puis on appelle la fonction de gestion du bouton*/
+    /* on appelle la fonction qui va écouter le bouton ajouter une photo */
     const buttonAddWork = document.querySelector(".modal-wrapper .button");
-    buttonAddWork.addEventListener("click", (event) => buttonModalManagement(event));
+    buttonModalManagementEventListener(buttonAddWork);
 }
 
 /**

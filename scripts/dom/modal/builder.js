@@ -25,9 +25,6 @@ import {
     labelTitreText,
     labelCategoriesText
 } from "../../config/text.js";
-import { addPhotoManagement } from "./events.js";
-import { deleteWorkManagement } from "./modalGallery.js";
-import { validateButtonManagement } from "./form.js";
 import {
     errorClass,
     disabledClass
@@ -72,15 +69,7 @@ export function createWorkEditMode(work) {
 
 
     /* on appelle la fonction qui va créer le bouton délete avec l'icone*/
-    let buttonElement = createIconeBouton(deleteButton.classBouton, deleteButton.classIcone, deleteButton.ariaLabel);
-    /* on l'ajoute aux enfants de l'élement figure */
-    listeFigureElement.push(buttonElement);
-
-    // on écoute le click pour appeller la fonction de gestion de la suppression d'une oeuvre
-    buttonElement.addEventListener("click", (event) => {
-        const workId = event.target.closest("figure").getAttribute("data-id");
-        deleteWorkManagement(workId);
-    });
+    listeFigureElement.push(createIconeBouton(deleteButton.classBouton, deleteButton.classIcone, deleteButton.ariaLabel));
 
     /* on rattache les enfants a l'élément fontawesome supprimer : 2ème enfant de figureElement*/
     listeButtonElement.forEach(element => listeFigureElement[1].appendChild(element));
@@ -132,29 +121,13 @@ export function createBlocAddPhoto() {
     let listeChildElementDivPhoto = [];
 
     /* on appelle la fonction qui va créer l'élément add-photo*/
-    const imageElement = createElement("img", imageAddPhotoAttribute);
-    /* on ajoute un écouteur click sur l'image pour déclancher l'input */
-    imageElement.addEventListener("click", () => {
-        document.getElementById(inputFileAttribute.id).click();
-    });
-    /* on l'ajoute à la liste des enfants du bloc Div Photo */
-    listeChildElementDivPhoto.push(imageElement);
-
+    listeChildElementDivPhoto.push(createElement("img", imageAddPhotoAttribute));
 
     /* on appelle la fonction qui va créer l'élément add-photo*/
     listeChildElementDivPhoto.push(createElement("label", labelFileAttribute, labelFileText));
 
     /* on appelle la fonction qui va créer l'élément input type file*/
-    const inputElement = createElement("input", inputFileAttribute);
-    /* on ajoute un écouteur change */
-    inputElement.addEventListener("change", () => {
-        addPhotoManagement(inputElement.files[0]);
-        validateButtonManagement();
-        removeErrorMessage(inputElement);
-    });
-
-    /* on l'ajoute à la liste des enfants du bloc Div Photo */
-    listeChildElementDivPhoto.push(inputElement);
+    listeChildElementDivPhoto.push(createElement("input", inputFileAttribute));
 
     /* on crée un objet regroupant tous les attributs paragraphe d'information*/
 
@@ -176,13 +149,8 @@ export function createBlocDivTitre() {
     /* on appelle la fonction qui va créer l'élément label-titre*/
     listeChildElementDivTitre.push(createElement("label", labelTitreAttribute, labelTitreText));
 
-    /* on appelle la fonction qui va créer l'élément input type file*/
-    const inputTitreElement = createElement("input", inputTitreAttribute);
-    inputTitreElement.addEventListener("focus", () => {
-        validateButtonManagement();
-        removeErrorMessage(inputTitreElement);
-    });
-    listeChildElementDivTitre.push(inputTitreElement);
+    /* on appelle la fonction qui va créer l'élément input titre*/
+    listeChildElementDivTitre.push(createElement("input", inputTitreAttribute));
 
     return listeChildElementDivTitre
 }
@@ -199,13 +167,8 @@ export async function createBlocDivCategories() {
     /* on appelle la fonction qui va créer l'élément label-categories*/
     listeChildElementDivCategories.push(createElement("label", labelCategoriesAttribute, labelCategoriesText));
 
-    /* on appelle la fonction qui va créer l'élément input type file*/
-    const selectCategoriesElement = createElement("select", selectCategoriesAttribute);
-    selectCategoriesElement.addEventListener("change", () => {
-        validateButtonManagement();
-        removeErrorMessage(selectCategoriesElement);
-    });
-    listeChildElementDivCategories.push(selectCategoriesElement);
+    /* on appelle la fonction qui va créer l'élément select categories */
+    listeChildElementDivCategories.push(createElement("select", selectCategoriesAttribute));
 
     /* on appelle la fonction qui va créer les options */
     let listeChildElementSelect = await createBlocSelect();
@@ -227,7 +190,6 @@ export async function createBlocSelect() {
 
     /* on appelle la fonction qui va créer l'élément option*/
     listeChildElementSelect.push(createElement("option", optionCategorieAttribute));
-
 
     /* onmodal-delete-work récupère les catégories du serveur */
     const listeCategories = await getCategories();
@@ -264,26 +226,6 @@ export function buttonDisabled(button) {
 export function buttonActivated(button) {
     button.disabled = false;
     button.classList.remove(disabledClass);
-}
-
-/**
- * Cette fonction réinitialise les champs passés en paramètre
- * @param {HTMLElement} inputFile 
- * @param {HTMLElement} inputText 
- * @param {HTMLElement} select 
- */
-export function resetPostWork(inputFile, inputText, select) {
-
-    /* on réinitialise les champs */
-    inputFile.value = "";
-    inputText.value = "";
-    select.selectedIndex = 0;
-
-    /* on rappelle la fonction qui gère le bouton 
-    puis celle qui gère l'affichage de l'image */
-    validateButtonManagement();
-    addPhotoManagement(inputFile.files[0]);
-
 }
 
 /**

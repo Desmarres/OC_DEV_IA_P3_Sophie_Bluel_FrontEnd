@@ -14,19 +14,28 @@ import { createWorkEditMode } from "./builder.js";
  */
 export async function generateEditGallery(divModalGallery) {
 
-    // on récupére toutes les oeuvres de l'artiste
+    /* on récupére toutes les oeuvres de l'artiste */
     const works = await getWorks();
 
-    // Initialisation de la div
+    /* Initialisation de la div */
     divModalGallery.innerHTML = "";
 
-    // pour chaque élément de la liste, on va créer une fiche de l'oeuvre
+    /* pour chaque élément de la liste, on va créer une fiche de l'oeuvre */
     works.forEach(work => {
 
-        // on appelle la fonction qui va créer l'élément figure avec l'oeuvre
+        /* on appelle la fonction qui va créer l'élément figure avec l'oeuvre */
         const figureElement = createWorkEditMode(work);
 
-        // on rattache la figure à la div gallery
+        /* on ajoute l'écouteur sur le boutton logo-delete-work */
+        const buttonElement = figureElement.querySelector("button");
+
+        /* on écoute le click pour appeller la fonction de gestion de la suppression d'une oeuvre */
+        buttonElement.addEventListener("click", (event) => {
+            const workId = event.target.closest("figure").getAttribute("data-id");
+            deleteWorkManagement(workId);
+        });
+
+        /* on rattache la figure à la div gallery */
         divModalGallery.appendChild(figureElement);
     })
 }
@@ -38,7 +47,7 @@ export async function generateEditGallery(divModalGallery) {
  * l'ensemble des oeuvres correspondant à cette id du site
  * @param {number} id : id de l'oeuvre à supprimer
  */
-export async function deleteWorkManagement(id) {
+async function deleteWorkManagement(id) {
 
     // on appelle la fonction qui va requeter l'API pour supprimer 
     // l'élement correspondant à l'id reçu en entrée

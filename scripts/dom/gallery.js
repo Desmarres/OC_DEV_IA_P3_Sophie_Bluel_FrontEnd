@@ -6,9 +6,10 @@
 
 import { filterGallery } from "../services/data.js";
 import { createElement } from "./ui.js";
-import { divFilterAttribute, buttonFilterAttribute } from "../config/attributs.js";
+import { divFilterAttribute, buttonFilterDefaultAttribute } from "../config/attributs.js";
 import { hiddenClass, filterSelectedClass } from "../config/constants.js";
 import { buttonFilterTousText } from "../config/text.js";
+
 
 /**
  * Cette fonction récupère en pramètre un tableau d'oeuvre
@@ -25,7 +26,7 @@ import { buttonFilterTousText } from "../config/text.js";
                                                 }
                             }]
  */
-export function generateGallery(works) {
+export function generateMainGallery(works) {
 
     /* Récupération de l'élément du DOM qui accueillera les oeuvres */
     const divGallery = document.querySelector("#portfolio .gallery");
@@ -104,8 +105,8 @@ export function generateFilterCategory(categories, listCategories) {
     /* initilisation de la variable enfant de la div */
     let listedivFilter = [];
 
-    /* création du premier bouton qui est actif par défaut */
-    let buttonFilterTousAttribute = { ...buttonFilterAttribute };
+    /* Récupération des attributs par défaut du bouton */
+    let buttonFilterTousAttribute = { ...buttonFilterDefaultAttribute };
     /* on rajoute la class Selected au class par défaut des boutons */
     buttonFilterTousAttribute.class += " " + filterSelectedClass;
     /* on l'ajoute aux enfants de l'élement div filtre */
@@ -116,6 +117,8 @@ export function generateFilterCategory(categories, listCategories) {
 
         /* initilaisation du text du bouton */
         let buttonFilterText = category.name;
+        /* Récupération des attributs par défaut du bouton */
+        let buttonFilterAttribute = { ...buttonFilterDefaultAttribute }
         /* modification du data-id suivant la catégorie */
         buttonFilterAttribute['data-id'] = category.id;
         /* Si aucune oeuvre de l'artiste ne rentre dans la catégorie :
